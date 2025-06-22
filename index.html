@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sitio de Corredores</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+    <header>
+        <h1>Sitio de Corredores</h1>
+        <img src="img/corredores.png" alt="Corredores de Uruguay Logo" class="logo">
+    </header>
+
+    <br>
+
+    <form action="post">
+        <nav>
+            <input type="button" id="idBtnDatos" name="btnDatos" value="Datos">
+            <input type="button" id="idBtnEstadisticas" name="btnEstadisticas" value="Estadisticas">
+        </nav>
+
+        <main>
+            <section>
+                <h2>Datos</h2>
+
+                <article>
+                    <h3>Carreras</h3>
+
+                    <label for="idNombreCarrera">Nombre:</label>
+                    <input type="text" id="idNombreCarrera" name="nombreCarrera">
+
+                    <label for="idDepartamentos">Departamento:</label>
+                    <select name="departamentos" id="idDepartamentos">
+                        <option value="1">Montevideo</option>
+                        <option value="2">Canelones</option>
+                        <option value="3">Maldonado</option>
+                        <option value="4">Rocha</option>
+                        <option value="5">Treinta y Tres</option>
+                        <option value="6">Cerro Largo</option>
+                        <option value="7">Rivera</option>
+                        <option value="8">Artigas</option>
+                        <option value="9">Salto</option>
+                        <option value="10">Paysandú</option>
+                        <option value="11">Río Negro</option>
+                        <option value="12">Soriano</option>
+                        <option value="13">Colonia</option>
+                        <option value="14">San José</option>
+                        <option value="15">Flores</option>
+                        <option value="16">Florida</option>
+                        <option value="17">Lavalleja</option>
+                        <option value="18">Durazno</option>
+                        <option value="19">Tacuarembó</option>
+                    </select>
+
+
+
+                    <label for="idFechaCarrera">Fecha:</label>
+                    <input type="date" id="idFechaCarrera" name="fechaCarrera">
+
+                    <label for="idCupoCarrera">Cupo:</label>
+                    <input type="number" id="idCupoCarrera" name="cupoCarrera" min="1" max="1000" value="30">
+
+                    <input type="button" id="idBtnAgregarCarrera" name="btnAgregarCarrera" value="Agregar Carrera">
+
+                </article>
+
+                <article>
+                    <h3>Patrocinadores</h3>
+
+                    <label for="idNombrePatrocinador">Nombre</label>
+                    <input type="text" id="idNombrePatrocinador" name="nombrePatrocinador">
+
+                    <label for="idRubroPatrocinador">Rubro:</label>
+                    <select name="rubroPatrocinador" id="idRubroPatrocinador">
+                        <option value="alimenticio">Alimenticio</option>
+                        <option value="banco">Banco</option>
+                        <option value="bebidas">Bebidas</option>
+                        <option value="farmacia">Farmacia</option>
+                        <option value="ropaDeportiva">Ropa deportiva</option>
+                        <option value="estatal">Estatal</option>
+                        <option value="general">General</option>
+                    </select>
+
+                    <label>Carreras:</label>
+                    <!-- algo aca que no se que es -->
+                    <input type="button" value="Agregar/Actualizar Patrocinador">
+
+                </article>
+
+                <article>
+
+                    <h3>Corredores</h3>
+
+                    <label for="idNombreCorredor">Nombre:</label>
+                    <input type="text" id="idNombreCorredor" name="nombreCorredor">
+
+                    <label for="idEdadCorredor">Edad:</label>
+                    <input type="number" id="idEdadCorredor" name="edadCorredor" min="18">
+
+                    <label for="idCedulaCorredor">Cedula:</label>
+                    <input type="number" id="idCedulaCorredor" name="cedulaCorredor">
+
+                    <label for="idFechaFicha">Fecha de vencimiento de ficha medica:</label>
+                    <input type="date" id="idFechaFicha" name="fechaFicha">
+
+                    <label>Tipo de corredor:</label>
+
+                    <input type="radio" name="tipoCorredor" id="idElite">
+                    <label for="idElite">Deportista de elite</label>
+
+                    <input type="radio" name="tipoCorredor" id="idComun">
+                    <label for="idComun">Deportista comun</label>
+
+                    <input type="button" id="idBtnAgregarCorredor" name="btnAgregarCorredor" value="Agregar Corredor">
+
+                </article>
+
+                <article>
+
+                    <h3>Inscripciones</h3>
+
+                    <label for="idCorredoresInscribir">Corredores</label>
+                    <select name="corredoresInscribir" id="idCorredoresInscribir">
+
+                    </select>
+                    <label for="idCarrerasInscribir">Carreras</label>
+                    <select name="carrerasInscribir" id="idCarrerasInscribir">
+
+                    </select>
+
+                    <input type="button" id="idBtnInscribir" name="btnInscribir" value="Inscribir">
+                </article>
+            </section>
+
+            <section>
+                <h2>Estadisticas</h2>
+                <article>
+                    <h3>Datos generales</h3>
+
+                    <p>Promedio de inscriptos por carreras: sin datos</p>
+
+                    <p>Carrera/s con mas inscriptos</p>
+                    <ul>
+                        <li>sin datos</li>
+                    </ul>
+
+                    <p>Carreras sin inscriptos ordenadas por fecha</p>
+                    <ul>
+                        <li>sin datos</li>
+                    </ul>
+
+                    <p>Porcentaje de corredores de elite: sin datos</p>
+                </article>
+
+                <article>
+                    <h3>Consulta inscriptos</h3>
+                    <label for="idConsultaCarrera">Carrera</label>
+                    <select name="consultaCarrera" id="idConsultaCarrera">
+                        <option></option>
+                    </select>
+
+                    <label>Ordenar por:</label>
+
+                    <div class="sin">
+                        <input type="radio" name="orden" id="idNombreOrden">
+                        <label for="idNombreOrden">Nombre</label>
+                        <input type="radio" name="orden" id="idNumeroOrden">
+                        <label for="idNumeroOrden">Numero</label>
+                    </div>
+
+                    <table class="sin">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Edad</th>
+                                <th>Cedula</th>
+                                <th>Ficha Medica</th>
+                                <th>Numero</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </article>
+
+                <article>
+                    <h3>Visualizar Mapa:</h3>
+                    <div class="sin">
+                        <input type="radio" name="mapa" id="idMapaCarreras">
+                        <label for="idMapaCarreras">Por Carreras</label>
+                        <input type="radio" name="mapa" id="idMapaInscripciones">
+                        <label for="idMapaInscripciones">Por Inscripciones</label>
+                    </div>
+                </article>
+            </section>
+        </main>
+        <footer>
+            <p>Programacion 1 - Obligartorio 1er semestre 2025 - Autor:</p>
+            <p>Grupo m1d - Leandro Rizzo - 354610 - <a href="https://linkedin.com" target="_BLANK">Link</a></p>
+        </footer>
+    </form>
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+/* estilos.css */
+article {
+    background-color: #00FF7F;
+    padding: 1em;
+    margin: 0.4em;
+    border-radius: 15px;
+}
+
+section {
+    background-color: #D5F4D4;
+    padding: 1em;
+    margin: 0.8em;
+    border-radius: 15px;
+}
+
+footer {
+    background-color: #F0F4D4;
+    margin: 0.8em;
+    padding: 1em;
+    border-radius: 15px;
+    text-align: center;
+}
+
+h1 {
+    text-align: center;
+}
+
+.logo {
+    display: block;
+    margin: 0 auto;
+    width: 20vw;
+}
+
+/* todos los elementos dentro de los articulos se muestran en bloque menos los que tienen clase "sin" */
+article *:not(.sin *) {
+    display: block;
+}
+
