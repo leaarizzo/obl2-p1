@@ -1,3 +1,9 @@
+<!--
+Autores: Leandro Rizzo (354610), Mateo Laporta (354622)
+Grupo: m1d
+Obligatorio Programación 1 - 1er semestre 2025
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -16,17 +22,17 @@
 
     <br>
 
-    <form action="post">
-        <nav>
-            <input type="button" id="idBtnDatos" name="btnDatos" value="Datos">
-            <input type="button" id="idBtnEstadisticas" name="btnEstadisticas" value="Estadisticas">
-        </nav>
+    <nav>
+        <input type="button" id="idBtnDatos" name="btnDatos" value="Datos">
+        <input type="button" id="idBtnEstadisticas" name="btnEstadisticas" value="Estadísticas">
+    </nav>
 
-        <main>
-            <section>
-                <h2>Datos</h2>
+    <main>
+        <section>
+            <h2>Datos</h2>
 
-                <article>
+            <article>
+                <form id="idFormCarreras">
                     <h3>Carreras</h3>
 
                     <label for="idNombreCarrera">Nombre:</label>
@@ -55,19 +61,18 @@
                         <option value="19">Tacuarembó</option>
                     </select>
 
-
-
                     <label for="idFechaCarrera">Fecha:</label>
                     <input type="date" id="idFechaCarrera" name="fechaCarrera">
 
                     <label for="idCupoCarrera">Cupo:</label>
                     <input type="number" id="idCupoCarrera" name="cupoCarrera" min="1" max="1000" value="30">
 
-                    <input type="button" id="idBtnAgregarCarrera" name="btnAgregarCarrera" value="Agregar Carrera">
+                    <input type="button" id="idBtnAgregarCarrera" name="btnAgregarCarrera" value="Agregar carrera">
+                </form>
+            </article>
 
-                </article>
-
-                <article>
+            <article>
+                <form id="idFormPatrocinadores">
                     <h3>Patrocinadores</h3>
 
                     <label for="idNombrePatrocinador">Nombre</label>
@@ -85,13 +90,14 @@
                     </select>
 
                     <label>Carreras:</label>
-                    <!-- algo aca que no se que es -->
-                    <input type="button" value="Agregar/Actualizar Patrocinador">
+                    <select multiple size="4" class="select-peq" id="idCarrerasPatrocinio"></select>
 
-                </article>
+                    <input type="button" id="idBtnAgregarPatrocinador">
+                </form>
+            </article>
 
-                <article>
-
+            <article>
+                <form id="idFormCorredores">
                     <h3>Corredores</h3>
 
                     <label for="idNombreCorredor">Nombre:</label>
@@ -100,110 +106,112 @@
                     <label for="idEdadCorredor">Edad:</label>
                     <input type="number" id="idEdadCorredor" name="edadCorredor" min="18">
 
-                    <label for="idCedulaCorredor">Cedula:</label>
+                    <label for="idCedulaCorredor">Cédula:</label>
                     <input type="number" id="idCedulaCorredor" name="cedulaCorredor">
 
-                    <label for="idFechaFicha">Fecha de vencimiento de ficha medica:</label>
+                    <label for="idFechaFicha">Fecha de vencimiento de ficha médica:</label>
                     <input type="date" id="idFechaFicha" name="fechaFicha">
 
-                    <label>Tipo de corredor:</label>
+                    <div class="fila">
+                        <label>Tipo de corredor:</label>
+                        <input type="radio" name="tipoCorredor" id="idElite">
+                        <label for="idElite">Deportista de élite</label>
+                        <input type="radio" name="tipoCorredor" id="idComun" checked>
+                        <label for="idComun">Deportista común</label>
+                    </div>
 
-                    <input type="radio" name="tipoCorredor" id="idElite">
-                    <label for="idElite">Deportista de elite</label>
+                    <input type="button" id="idBtnAgregarCorredor" name="btnAgregarCorredor" value="Agregar corredor">
+                </form>
+            </article>
 
-                    <input type="radio" name="tipoCorredor" id="idComun">
-                    <label for="idComun">Deportista comun</label>
-
-                    <input type="button" id="idBtnAgregarCorredor" name="btnAgregarCorredor" value="Agregar Corredor">
-
-                </article>
-
-                <article>
-
+            <article>
+                <form id="idFormInscribir">
                     <h3>Inscripciones</h3>
 
                     <label for="idCorredoresInscribir">Corredores</label>
-                    <select name="corredoresInscribir" id="idCorredoresInscribir">
+                    <select name="corredoresInscribir" id="idCorredoresInscribir" class="select-peq"></select>
 
-                    </select>
                     <label for="idCarrerasInscribir">Carreras</label>
-                    <select name="carrerasInscribir" id="idCarrerasInscribir">
-
-                    </select>
+                    <select name="carrerasInscribir" id="idCarrerasInscribir" class="select-peq"></select>
 
                     <input type="button" id="idBtnInscribir" name="btnInscribir" value="Inscribir">
-                </article>
-            </section>
+                </form>
+            </article>
+        </section>
 
-            <section>
-                <h2>Estadisticas</h2>
-                <article>
-                    <h3>Datos generales</h3>
+        <section>
+            <h2>Estadísticas</h2>
 
-                    <p>Promedio de inscriptos por carreras: sin datos</p>
+            <article>
+                <h3>Datos generales</h3>
+                <p>Promedio de inscriptos por carreras: Sin datos</p>
+                <p>Carrera/s con más inscriptos</p>
+                <ul>
+                    <li>• Sin datos</li>
+                </ul>
+                <p>Carreras sin inscriptos ordenadas por fecha</p>
+                <ul>
+                    <li>• Sin datos</li>
+                </ul>
+                <p>Porcentaje de corredores de élite: Sin datos</p>
+            </article>
 
-                    <p>Carrera/s con mas inscriptos</p>
-                    <ul>
-                        <li>sin datos</li>
-                    </ul>
+            <article>
+                <form>
+                    <h3>Consulta de inscriptos</h3>
 
-                    <p>Carreras sin inscriptos ordenadas por fecha</p>
-                    <ul>
-                        <li>sin datos</li>
-                    </ul>
-
-                    <p>Porcentaje de corredores de elite: sin datos</p>
-                </article>
-
-                <article>
-                    <h3>Consulta inscriptos</h3>
                     <label for="idConsultaCarrera">Carrera</label>
-                    <select name="consultaCarrera" id="idConsultaCarrera">
-                        <option></option>
-                    </select>
+                    <select name="consultaCarrera" id="idConsultaCarrera" class="select-peq"></select>
 
-                    <label>Ordenar por:</label>
-
-                    <div class="sin">
-                        <input type="radio" name="orden" id="idNombreOrden">
+                    <div class="fila">
+                        <label>Ordenar por:</label>
+                        <input type="radio" name="orden" id="idNombreOrden" checked>
                         <label for="idNombreOrden">Nombre</label>
                         <input type="radio" name="orden" id="idNumeroOrden">
-                        <label for="idNumeroOrden">Numero</label>
+                        <label for="idNumeroOrden">Número</label>
                     </div>
+
+                    <br>
 
                     <table class="sin">
+                        <caption><b>Inscriptos</b></caption>
                         <thead>
                             <tr>
-                                <th>Nombre</th>
-                                <th>Edad</th>
-                                <th>Cedula</th>
-                                <th>Ficha Medica</th>
-                                <th>Numero</th>
+                                <th><b>Nombre</b></th>
+                                <th><b>Edad</b></th>
+                                <th><b>Cédula</b></th>
+                                <th><b>Ficha médica</b></th>
+                                <th><b>Número</b></th>
                             </tr>
                         </thead>
-
-                        <tbody>
-
-                        </tbody>
+                        <tbody></tbody>
                     </table>
-                </article>
+                </form>
+            </article>
 
-                <article>
-                    <h3>Visualizar Mapa:</h3>
+            <article>
+                <form>
+                    <h3>Visualizar mapa:</h3>
                     <div class="sin">
-                        <input type="radio" name="mapa" id="idMapaCarreras">
-                        <label for="idMapaCarreras">Por Carreras</label>
+                        <input type="radio" name="mapa" id="idMapaCarreras" checked>
+                        <label for="idMapaCarreras">Por carreras</label>
                         <input type="radio" name="mapa" id="idMapaInscripciones">
-                        <label for="idMapaInscripciones">Por Inscripciones</label>
+                        <label for="idMapaInscripciones">Por inscripciones</label>
                     </div>
-                </article>
-            </section>
-        </main>
-        <footer>
-            <p>Programacion 1 - Obligartorio 1er semestre 2025 - Autor:</p>
-            <p>Grupo m1d - Leandro Rizzo - 354610 - <a href="https://linkedin.com" target="_BLANK">Link</a></p>
-        </footer>
-    </form>
+
+                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                </form>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>Programación 1 - Obligatorio 1er semestre 2025 - Autores:</p>
+        <p>Grupo m1d - Leandro Rizzo ... (Número 354610) - <a href="https://www.linkedin.com/in/leandro--rizzo/"
+                target="_BLANK">Link</a></p>
+        <p>Grupo m1d - Mateo Laporta ... (Número 354622) - <a href="https://www.ort.edu.uy/" target="_BLANK">Link</a>
+        </p>
+    </footer>
 </body>
 
 </html>

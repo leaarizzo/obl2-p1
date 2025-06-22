@@ -1,4 +1,9 @@
-/* estilos.css */
+/*
+Autores: Leandro Rizzo (354610), Mateo Laporta (354622)
+Grupo: m1d
+Obligatorio Programación 1 - 1er semestre 2025
+*/
+
 article {
     background-color: #00FF7F;
     padding: 1em;
@@ -31,8 +36,42 @@ h1 {
     width: 20vw;
 }
 
-/* todos los elementos dentro de los articulos se muestran en bloque menos los que tienen clase "sin" */
-article *:not(.sin *) {
+/* Estructura de los <article> */
+article * {
     display: block;
 }
 
+article .sin * {
+    display: revert;
+}
+
+/* Tablas sin bordes globales */
+table.sin {
+    border-collapse: collapse;
+    background-color: #00FF7F;
+    width: auto;
+    margin: 0 auto;
+    border: none;
+}
+
+table.sin caption {
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+
+table.sin th {
+    border: 1px solid black;
+    padding: 4px 10px;
+    text-align: center;
+}
+
+/* Clases añadidas */
+.fila {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.select-peq {
+    width: 70px;
+}
