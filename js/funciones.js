@@ -7,6 +7,13 @@ function inicio() {
     document.getElementById("idBtnAgregarCorredor").addEventListener("click", agregarCorredor);
     document.getElementById("idBtnInscribir").addEventListener("click", inscribir);
 
+    document.getElementById("idSeccionDatos").classList.remove("oculto");
+    document.getElementById("idSeccionEstadisticas").classList.add("oculto");
+
+    document.getElementById("idBtnDatos").classList.add("botonActivo");
+
+    document.getElementById("idBtnDatos").onclick = mostrarDatos;
+    document.getElementById("idBtnEstadisticas").onclick = mostrarEstadisticas;
 }
 
 function agregarCarrera() {
@@ -81,7 +88,16 @@ function inscribir(){
     }
 }
 
+function mostrarDatos() {
+    document.getElementById("idSeccionDatos").classList.remove("oculto");
+    document.getElementById("idSeccionEstadisticas").classList.add("oculto");
+    document.getElementById("idBtnDatos").classList.add("botonActivo");
+    document.getElementById("idBtnEstadisticas").classList.remove("botonActivo");
+}
 
-
-
-
+function mostrarEstadisticas() {
+    document.getElementById("idSeccionDatos").classList.add("oculto");
+    document.getElementById("idSeccionEstadisticas").classList.remove("oculto");
+    document.getElementById("idBtnDatos").classList.remove("botonActivo");
+    document.getElementById("idBtnEstadisticas").classList.add("botonActivo");
+}

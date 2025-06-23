@@ -75,3 +75,12 @@ table.sin th {
 .select-peq {
     width: 70px;
 }
+
+.oculto {
+  display: none;
+}
+
+.botonActivo {
+  background-color: #444;
+  color: white;
+}
