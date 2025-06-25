@@ -1,3 +1,9 @@
+/*
+Autores: Leandro Rizzo (354610), Mateo Laporta (354622)
+Grupo: m1d
+Obligatorio Programación 1 - 1er semestre 2025
+*/
+
 window.addEventListener("load", inicio);
 let sistema = new sistema();
 
@@ -40,10 +46,8 @@ function agregarPatrocinador() {
         let nombre = document.getElementById("idNombrePatrocinador").value;
         let rubro = document.getElementById("idRubroPatrocinador").value;
         let carreraApoyo = document.getElementById("idCarrerasPatrocinio").value;
-        /*
         sistema.eliminarPatrocinador(nombre);
         sistema.agregarPatrocinador(new Patrocinador(nombre, rubro, carreraApoyo));
-        */
     }
 }
 

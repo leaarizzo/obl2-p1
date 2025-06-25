@@ -1,3 +1,9 @@
+/*
+Autores: Leandro Rizzo (354610), Mateo Laporta (354622)
+Grupo: m1d
+Obligatorio Programación 1 - 1er semestre 2025
+*/
+
 class Carrera {
     constructor(nombre, departamento, fecha, cupoMax) {
         this.nombre = nombre;
@@ -186,7 +192,5 @@ class Sistema {
 
         return respuesta;
     }
-
-    
 
 }   
