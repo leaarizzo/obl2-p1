@@ -40,8 +40,10 @@ function agregarPatrocinador() {
         let nombre = document.getElementById("idNombrePatrocinador").value;
         let rubro = document.getElementById("idRubroPatrocinador").value;
         let carreraApoyo = document.getElementById("idCarrerasPatrocinio").value;
+        /*
         sistema.eliminarPatrocinador(nombre);
         sistema.agregarPatrocinador(new Patrocinador(nombre, rubro, carreraApoyo));
+        */
     }
 }
 

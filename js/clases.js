@@ -18,6 +18,10 @@ class Carrera {
     agregarInscripto(inscripto) {
         this.inscriptos.push(inscripto);
     }
+
+    compararPorFecha(otra) {
+        return this.fecha - otra.fecha;
+    }
 }
 
 class Corredor {
@@ -127,4 +131,62 @@ class Sistema {
         }
         return carreraObjeto;
     }
-}
+
+    carrerasMasInscriptos() {
+        let carreraMax = ["sin datos"];
+        let maxInscriptos = 0;
+        for (let elemCMI of this.listaCarreras) {
+            if (elemCMI.inscriptos.length < maxInscriptos) {
+                carreraMax = [];
+                carreraMax.push();
+            } else if (elemCMI.inscriptos.length == maxInscriptos && maxInscriptos != 0) {
+                carreraMax.push();
+            }
+        }
+        return carreraMax;
+    }
+
+    promedioInscriptosPorCarrera() {
+        let totalInscriptos = 0;
+        for (let carrera of this.listaCarreras) {
+            totalInscriptos += carrera.inscriptos.length;
+        }
+        return totalInscriptos / this.listaCarreras.length;
+    }
+
+    carrerasVaciasPorFecha() {
+        let carrerasVaciasOrdenadas = [];
+        for (let carrera of this.listaCarreras) {
+            if (carrera.inscriptos.length == 0) {
+                carrerasVaciasOrdenadas.push(carrera);
+                carrerasVaciasOrdenadas.sort(function (a, b) {
+                    return a.compararPorFecha(b);
+                });
+            }
+        }
+
+        return carrerasVaciasOrdenadas;
+    }
+
+    porcentajeElite() {
+        let totalElite = 0;
+        let totalComun = 0;
+        let respuesta = "No hay corredores comunes";
+        for (let elemEl of this.listaCorredores) {
+            if (elemEl.tipoDeportista == "elite") {
+                totalElite++;
+            } else if (elemEl.tipoDeportista == "comun") {
+                totalComun++;
+            }
+        }
+        
+        if (totalComun != 0) {
+            respuesta = totalElite * 100 / totalComun + "% de corredores elite";
+        }
+
+        return respuesta;
+    }
+
+    
+
+}   
