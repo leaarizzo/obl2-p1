@@ -45,7 +45,7 @@ function agregarPatrocinador() {
     if (document.getElementById("idFormPatrocinadores").reportValidity()) {
         let nombre = document.getElementById("idNombrePatrocinador").value;
         let rubro = document.getElementById("idRubroPatrocinador").value;
-        let carreraApoyo = document.getElementById("idCarrerasPatrocinio").value;
+        let carreraApoyo = document.getElementById("idCarrerasPatrocinio").value; //debe ser al menos uno -  hacer.
         sistema.eliminarPatrocinador(nombre);
         sistema.agregarPatrocinador(new Patrocinador(nombre, rubro, carreraApoyo));
     }
