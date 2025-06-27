@@ -36,7 +36,6 @@ h1 {
     width: 20vw;
 }
 
-/* Estructura de los <article> */
 article * {
     display: block;
 }
@@ -45,7 +44,6 @@ article .sin * {
     display: revert;
 }
 
-/* Tablas sin bordes globales */
 table.sin {
     border-collapse: collapse;
     background-color: #00FF7F;
@@ -65,7 +63,6 @@ table.sin th {
     text-align: center;
 }
 
-/* Clases añadidas */
 .fila {
     display: flex;
     align-items: center;

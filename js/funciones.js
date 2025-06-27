@@ -58,7 +58,12 @@ function agregarCorredor() {
         let cedula = document.getElementById("idCedulaCorredor").value;
         let vencimientoFicha = document.getElementById("idFechaFicha").value;
         let vencimientoFichaObjeto = new Date(vencimientoFicha);
-        let tipoDeportista = document.getElementsByName("tipoCorredor");
+        let tipoDeportista = "";
+        if (document.getElementById("idTipoDeportistaComun").checked) {
+            tipoDeportista = "comun";
+        } else {
+            tipoDeportista = "elite";
+        }
 
         if (sistema.corredorUnica(cedula)) {
             sistema.agregarCorredor(new Corredor(nombre, edad, cedula, vencimientoFichaObjeto, tipoDeportista));
@@ -71,15 +76,17 @@ function agregarCorredor() {
     }
 }
 
-function inscribir(){
-    if (document.getElementById("idFormInscribir").reportValidity()){
-        let corredorCI = document.getElementById("idCorredoresInscribir").value;
-        let carreraNombre = document.getElementById("idCarrerasInscribir").value;
-        let corredorObjeto = sistema.buscarCorredor(corredorCI);
-        let carreraObjeto = sistema.buscarCarrera(carreraNombre);
-        if (carreraObjeto.tieneCupo() && corredorObjeto.vencimientoFicha - carreraObjeto.fecha > 0){
+function inscribir() {
+    if (document.getElementById("idFormInscribir").reportValidity()) {
+        let corredorIndex = document.getElementById("idCorredoresInscribir").value;
+        let carreraIndex = document.getElementById("idCarrerasInscribir").value;
+        let corredorObjeto = sistema.listaCorredores[corredorIndex];
+        let carreraObjeto = sistema.listaCarreras[carreraIndex];
+        if (carreraObjeto.tieneCupo() && corredorObjeto.vencimientoFicha - carreraObjeto.fecha > 0) {
             if (sistema.inscripcionUnica(corredorCI, carreraNombre)) {
-                sistema.agregarInscripcion(new Inscripcion(corredorObjeto, carreraObjeto));
+                let inscripcion = new Inscripcion(corredorObjeto, carreraObjeto);
+                inscripcion.agregarInscriptoNumero();
+                sistema.agregarInscripcion(inscripcion);
                 carreraObjeto.agregarInscripto(corredorObjeto);
                 alert("¡Inscripción exitosa!");
                 document.getElementById("idFormInscribir").reset();
@@ -107,3 +114,115 @@ function mostrarEstadisticas() {
     document.getElementById("idBtnDatos").classList.remove("botonActivo");
     document.getElementById("idBtnEstadisticas").classList.add("botonActivo");
 }
+
+actualizar(){
+    cargarCombosCarrera();
+    cargarCombosCorredores();
+    cargarCarreraConMasInscriptos();
+    cargarCarrerasSinInscriptosPorFecha();
+    cargarPorcentajeELite();
+    cargarTabla();
+    cargarMapa();
+}
+
+
+cargarCombosCarrera(){
+
+}
+
+cargarCombosCorredores(){
+
+}
+
+cargarTablaPorNumero(){
+
+}
+
+cargarTablaPorNombre(){
+
+}
+
+cargarTabla(){
+    if (document.getElementById("idComboTabla").value == "numero") {
+        cargarTablaPorNumero();
+    } else if (document.getElementById("idComboTabla").value == "nombre") {
+        cargarTablaPorNombre();
+    }
+}
+
+
+
+function agregarInscriptosEnTabla(texto) {
+    if (){
+
+    }
+    let tabla = document.getElementById("idTablaInscriptos"); // agarro la tabla
+    let fila = tabla.insertRow();
+    let celda1 = fila.insertCell();
+    let celda2 = fila.insertCell();
+    let celda3 = fila.insertCell(); 
+    let celda4 = fila.insertCell(); 
+    let celda5 = fila.insertCell(); 
+    celda1.innerHTML = nombre; 
+    celda2.innerHTML = texto;
+    celda3.innerHTML = texto;
+    celda4.innerHTML = texto;
+    celda5.innerHTML = texto;
+}
+
+cargarCarrerasConMasInscriptos(){
+    let lista = document.getElementById("idCarrerasMasInscriptos");
+    lista.innerHTML = "";
+    let datos = sistema.carrerasMasInscriptos();
+    for (let elem of datos) {
+        let nodo = document.createElement("LI");
+        let nodoTexto = document.createTextNode(elem);
+        nodo.appendChild(nodoTexto);
+        lista.appendChild(nodo);
+    }
+}
+
+
+
+cargarCarrerasSinInscriptosPorFecha(){
+    let lista = document.getElementById("idCarrerasSinInscriptos");
+    lista.innerHTML = "";
+    let datos = sistema.carrerasSinInscriptosPorFecha();
+    for (let elem of datos) {
+        let nodo = document.createElement("LI");
+        let nodoTexto = document.createTextNode(elem);
+        nodo.appendChild(nodoTexto);
+        lista.appendChild(nodo);
+    }
+}
+
+
+cargarPorcentajeEElite(){
+    let porcentaje = sistema.porcentajeElite();
+    document.getElementById("idPorcentajeElite").innerHTML = "Porcentaje de corredores élite: " + porcentaje + "%";
+
+}
+
+cargarPromedioInscriptosPorCarrera() {
+    let promedio = sistema.promedioInscriptosPorCarrera();
+    document.getElementById("idPromedioInscriptos").innerHTML = "Promedio de inscriptos por carrera: " + promedio;
+}
+
+/*
+cargarMapaPorCarreras(){
+
+}
+
+cargarMapaPorInscripciones(){
+
+}
+
+cargarMapa() {
+    if (document.getElementById("idComboMapa").value == "carreras") {
+        cargarMapaPorCarreras();
+    } else if (document.getElementById("idComboMapa").value == "inscripciones") {
+        cargarMapaPorInscripciones();
+    }
+}
+*/
+

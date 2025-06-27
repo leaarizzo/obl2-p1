@@ -28,6 +28,7 @@ class Carrera {
     compararPorFecha(otra) {
         return this.fecha - otra.fecha;
     }
+
 }
 
 class Corredor {
@@ -52,6 +53,11 @@ class Inscripcion {
     constructor(corredor, carrera) {
         this.corredor = corredor;
         this.carrera = carrera;
+        this.numero = 0;
+    }
+
+    agregarInscriptoNumero() {
+        this.numero = this.carrera.inscriptos.length + 1;
     }
 }
 
@@ -157,7 +163,7 @@ class Sistema {
         for (let carrera of this.listaCarreras) {
             totalInscriptos += carrera.inscriptos.length;
         }
-        return totalInscriptos / this.listaCarreras.length;
+        return (totalInscriptos / this.listaCarreras.length).toFixed(2);
     }
 
     carrerasVaciasPorFecha() {
@@ -185,9 +191,9 @@ class Sistema {
                 totalComun++;
             }
         }
-        
+
         if (totalComun != 0) {
-            respuesta = totalElite * 100 / totalComun + "% de corredores elite";
+            respuesta = totalElite * 100 / totalComun;
         }
 
         return respuesta;
