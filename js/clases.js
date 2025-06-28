@@ -42,10 +42,10 @@ class Corredor {
 }
 
 class Patrocinador {
-    constructor(nombre, rubro, carreraApoyo) {
+    constructor(nombre, rubro, carrerasApoyadas) {
         this.nombre = nombre;
         this.rubro = rubro;
-        this.carreraApoyo = carreraApoyo;
+        this.carrerasApoyadas = carrerasApoyadas;
     }
 }
 
@@ -59,6 +59,16 @@ class Inscripcion {
     agregarInscriptoNumero() {
         this.numero = this.carrera.inscriptos.length + 1;
     }
+
+    compararPorNombre(otro) {
+        return this.corredor.nombre.localeCompare(otro.corredor.nombre);
+    }
+
+
+    compararPorNumero(otro) {
+        return this.numero - otro.numero;
+    }
+
 }
 
 class Sistema {
@@ -90,6 +100,7 @@ class Sistema {
         for (let elemCI of this.listaCorredores) {
             if (cedula == elemCI.cedula) {
                 esUnico = false;
+                break;
             }
         }
         return esUnico;
@@ -100,6 +111,7 @@ class Sistema {
         for (let elemCN of this.listaCarreras) {
             if (carreraNombre == elemCN.nombre) {
                 esUnica = false;
+                break;
             }
         }
         return esUnica;
@@ -110,9 +122,21 @@ class Sistema {
         for (let elemIns of this.listaInscriptos) {
             if (elemIns.corredor.cedula == corredorCI && elemIns.carrera.nombre == carreraNombre) {
                 esUnica = false;
+                break;
             }
         }
         return esUnica;
+    }
+
+    patrocinadorUnico(nombrePatrocinador) {
+        let esUnico = true;
+        for (let elemPN of this.listaPatrocinadores) {
+            if (nombrePatrocinador == elemPN.nombre) {
+                esUnico = false;
+                break;
+            }
+        }
+        return esUnico;
     }
 
     eliminarPatrocinador(nombrePatrocinador) {
@@ -124,37 +148,27 @@ class Sistema {
         }
     }
 
-    buscarCorredor(corredorCI) {
-        let corredorObjeto = null;
-        for (let elemCI of this.listaCorredores) {
-            if (elemCI.cedula == corredorCI) {
-                corredorObjeto = elemCI;
+    buscarPatrocinador(nombre) {
+        let patrocinador = null;
+        for (let elemPC of this.listaPatrocinadores) {
+            if (elemPC.nombre == nombre) {
+                patrocinador = elemPC;
+                break;
             }
         }
-        return corredorObjeto;
-    }
-
-    buscarCarrera(carreraNombre) {
-        let carreraObjeto = null;
-        for (let elemC of this.listaCarreras) {
-            if (elemC.nombre == carreraNombre) {
-                carreraObjeto = elemC;
-            }
-        }
-        return carreraObjeto;
+        return patrocinador;
     }
 
     carrerasMasInscriptos() {
-        let carreraMax = ["sin datos"];
+        let carreraMax = ["Sin datos"];
         let maxInscriptos = 0;
         for (let elemCMI of this.listaCarreras) {
             if (elemCMI.inscriptos.length > maxInscriptos) {
-                4
                 maxInscriptos = elemCMI.inscriptos.length;
                 carreraMax = [];
-                carreraMax.push(elemCMI.nombre);
+                carreraMax.push(elemCMI);
             } else if (elemCMI.inscriptos.length == maxInscriptos && maxInscriptos != 0) {
-                carreraMax.push(elemCMI.nombre);
+                carreraMax.push(elemCMI);
             }
         }
         return carreraMax;
@@ -203,4 +217,42 @@ class Sistema {
         return respuesta;
     }
 
-}   
+    ordenarInscriptosPorNombre(carrera) {
+
+        let inscriptos = carrera.inscriptos.slice();
+        inscriptos.sort(function (a, b) {
+            return a.compararPorNombre(b);
+        });
+
+        return inscriptos;
+    }
+
+    ordenarInscriptosPorNumero(carrera) {
+
+        let inscriptos = carrera.inscriptos.slice();
+        inscriptos.sort(function (a, b) {
+            return a.compararPorNumero(b);
+        });
+
+        return inscriptos;
+    }
+
+    compararArraysCarreras(arrayCarreraActual, arrayCarreraViejo) {
+        let carreraActual = arrayCarreraActual.length;
+        let carreraVieja = arrayCarreraViejo.length;
+        let iguales = 0;
+        if (carreraActual == carreraVieja) {
+            for (let elemCA of arrayCarreraActual) {
+                if (arrayCarreraViejo.includes(elemCA)) {
+                    iguales++;
+                } else {
+                    break;
+                }
+            }
+        }
+        return iguales == carreraActual;
+    } 
+
+}
+
+
