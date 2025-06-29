@@ -166,9 +166,9 @@ class Sistema {
             if (elemCMI.inscriptos.length > maxInscriptos) {
                 maxInscriptos = elemCMI.inscriptos.length;
                 carreraMax = [];
-                carreraMax.push(elemCMI);
+                carreraMax.push(elemCMI.nombre + " - " + elemCMI.inscriptos.length + " inscriptos");
             } else if (elemCMI.inscriptos.length == maxInscriptos && maxInscriptos != 0) {
-                carreraMax.push(elemCMI);
+                carreraMax.push(elemCMI.nombre + " - " + elemCMI.inscriptos.length + " inscriptos");
             }
         }
         return carreraMax;
@@ -176,7 +176,7 @@ class Sistema {
 
     promedioInscriptosPorCarrera() {
         let totalInscriptos = 0;
-        let respuesta = "No hay carreras registradas";
+        let respuesta = "Sin datos";
         if (this.listaCarreras.length > 0) {
             for (let carrera of this.listaCarreras) {
                 totalInscriptos += carrera.inscriptos.length;
@@ -189,6 +189,7 @@ class Sistema {
 
     carrerasVaciasPorFecha() {
         let carrerasVaciasOrdenadas = [];
+        let nombreYFechaVacias = [];
         for (let carrera of this.listaCarreras) {
             if (carrera.inscriptos.length == 0) {
                 carrerasVaciasOrdenadas.push(carrera);
@@ -197,13 +198,22 @@ class Sistema {
         carrerasVaciasOrdenadas.sort(function (a, b) {
             return a.compararPorFecha(b);
         });
-        return carrerasVaciasOrdenadas;
+
+        for (let elemCVO of carrerasVaciasOrdenadas) {
+            nombreYFechaVacias.push(elemCVO.nombre + " - " + elemCVO.fecha.toLocaleDateString());
+        }
+
+        if (carrerasVaciasOrdenadas.length == 0) {
+            nombreYFechaVacias.push("Sin datos");
+        }
+        
+        return nombreYFechaVacias;
     }
 
     porcentajeElite() {
         let elite = 0;
         let total = this.listaCorredores.length;
-        let respuesta = "No hay corredores registrados";
+        let respuesta = "Sin datos";
         for (let elemEl of this.listaCorredores) {
             if (elemEl.tipoDeportista == "elite") {
                 elite++;
@@ -212,6 +222,7 @@ class Sistema {
 
         if (total != 0) {
             respuesta = ((elite * 100) / total).toFixed(2);
+            respuesta += "%"
         }
 
         return respuesta;
@@ -251,7 +262,7 @@ class Sistema {
             }
         }
         return iguales == carreraActual;
-    } 
+    }
 
 }
 

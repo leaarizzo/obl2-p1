@@ -162,7 +162,10 @@ function cargar() {
     cargarCombosInscripcionesCarreras();
     cargarCombosInscripcionesCorredores();
     cargarCombosConsultaInscriptosCarreras();
+    cargarPorcentajeElite();
     cargarCarrerasConMasInscriptos();
+    cargarPromedioInscriptosPorCarrera();
+    cargarCarrerasSinInscriptosPorFecha();
 }
 
 
@@ -247,7 +250,7 @@ function cargarCarrerasConMasInscriptos() {
     let datos = sistema.carrerasMasInscriptos();
     for (let elemCMI of datos) {
         let nodo = document.createElement("LI");
-        let nodoTexto = document.createTextNode(elemCMI.nombre + " - " + elemCMI.inscriptos.length + " inscriptos");
+        let nodoTexto = document.createTextNode(elemCMI);
         nodo.appendChild(nodoTexto);
         lista.appendChild(nodo);
     }
@@ -260,9 +263,9 @@ function cargarCarrerasSinInscriptosPorFecha() {
     let lista = document.getElementById("idCarrerasSinInscriptos");
     lista.innerHTML = "";
     let datos = sistema.carrerasVaciasPorFecha();
-    for (let elem of datos) {
+    for (let elemCVF of datos) {
         let nodo = document.createElement("LI");
-        let nodoTexto = document.createTextNode(elem.nombre + " - " + elem.fecha.toLocaleDateString());
+        let nodoTexto = document.createTextNode(elemCVF);
         nodo.appendChild(nodoTexto);
         lista.appendChild(nodo);
     }
@@ -271,10 +274,10 @@ function cargarCarrerasSinInscriptosPorFecha() {
 
 function cargarPorcentajeElite() {
     let porcentaje = sistema.porcentajeElite();
-    document.getElementById("idPorcentajeElite").innerHTML = "Porcentaje de corredores élite: " + porcentaje + "%";
+    document.getElementById("idPorcentajeElite").innerHTML = "Porcentaje de corredores élite: " + porcentaje;
 }
 
-function cargarPromedioInscriptosPorCarrera() {
+function cargarPromedioInscriptosPorCarrera() { //preguntarle a anuar si incluir o no cuando hay 0 inscriptos
     let promedio = sistema.promedioInscriptosPorCarrera();
     document.getElementById("idPromedioInscriptos").innerHTML = "Promedio de inscriptos por carrera: " + promedio;
 }
