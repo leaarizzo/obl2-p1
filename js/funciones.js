@@ -155,6 +155,7 @@ function mostrarEstadisticas() {
     document.getElementById("idSeccionEstadisticas").classList.remove("oculto");
     document.getElementById("idBtnDatos").classList.remove("botonActivo");
     document.getElementById("idBtnEstadisticas").classList.add("botonActivo");
+    drawRegionsMap();
 }
 
 function cargar() {
@@ -283,12 +284,119 @@ function cargarPromedioInscriptosPorCarrera() { //preguntarle a anuar si incluir
 }
 
 
-function cargarMapa() {
-    if (document.getElementById("idComboMapa").value == "carreras") {
-        cargarMapaPorCarreras();
-    } else if (document.getElementById("idComboMapa").value == "inscripciones") {
-        cargarMapaPorInscripciones();
+google.charts.load('current', {
+    packages: ['geochart']
+});
+
+google.charts.setOnLoadCallback(drawRegionsMap);
+
+let modo = 'carreras';
+
+function drawRegionsMap() {
+    let data = google.visualization.arrayToDataTable(getData());
+
+    let options = {
+        region: 'UY',
+        resolution: 'provinces',
+        colorAxis: { colors: ['#dbeafe', '#1e3a8a'] }, // azul claro a oscuro
+        datalessRegionColor: '#e0f2fe',
+        tooltip: { isHtml: true }
+    };
+
+    let chart = new google.visualization.GeoChart(document.getElementById('mapa'));
+    chart.draw(data, options);
+}
+
+function getData() {
+    let codigosDepartamentos = {
+        1: 'UY-MO',
+        2: 'UY-CA',
+        3: 'UY-MA',
+        4: 'UY-RO',
+        5: 'UY-TT',
+        6: 'UY-CL',
+        7: 'UY-RV',
+        8: 'UY-AR',
+        9: 'UY-SA',
+        10: 'UY-PA',
+        11: 'UY-RN',
+        12: 'UY-SO',
+        13: 'UY-CO',
+        14: 'UY-SJ',
+        15: 'UY-FS',
+        16: 'UY-FD',
+        17: 'UY-LA',
+        18: 'UY-DU',
+        19: 'UY-TA'
+    };
+
+    let nombresDepartamentos = {
+        1: "Montevideo",
+        2: "Canelones",
+        3: "Maldonado",
+        4: "Rocha",
+        5: "Treinta y Tres",
+        6: "Cerro Largo",
+        7: "Rivera",
+        8: "Artigas",
+        9: "Salto",
+        10: "Paysandú",
+        11: "Río Negro",
+        12: "Soriano",
+        13: "Colonia",
+        14: "San José",
+        15: "Flores",
+        16: "Florida",
+        17: "Lavalleja",
+        18: "Durazno",
+        19: "Tacuarembó"
+    };
+
+    let conteo = {};
+    for (let i = 1; i <= 19; i++) {
+        let cod = codigosDepartamentos[i];
+        conteo[cod] = 0;
     }
+
+    if (modo === 'carreras') {
+        for (let carrera of sistema.listaCarreras) {
+            let depto = parseInt(carrera.departamento);
+            let cod = codigosDepartamentos[depto];
+            if (cod) {
+                conteo[cod]++;
+            }
+        }
+    } else {
+        for (let inscripto of sistema.listaInscriptos) {
+            let carrera = inscripto.carrera;
+            let depto = parseInt(carrera.departamento);
+            let cod = codigosDepartamentos[depto];
+            if (cod) {
+                conteo[cod]++;
+            }
+        }
+    }
+
+    let resultado = [[
+        'Region',
+        modo === 'carreras' ? 'Carreras' : 'Inscriptos',
+        { role: 'tooltip', type: 'string', p: { html: true } }
+    ]];
+
+    for (let i = 1; i <= 19; i++) {
+        let cod = codigosDepartamentos[i];
+        let nombre = nombresDepartamentos[i];
+        let cantidad = conteo[cod];
+        let textoTooltip = `<strong>${nombre}</strong><br>${cantidad} ${modo === 'carreras' ? 'carreras' : 'inscriptos'}`;
+        resultado.push([cod, cantidad, textoTooltip]);
+    }
+
+    return resultado;
+}
+
+function cambiarModo(nuevoModo) {
+    modo = nuevoModo;
+    drawRegionsMap();
 }
 
 
