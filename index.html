@@ -12,6 +12,8 @@ Obligatorio Programación 1 - 1er semestre 2025
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sitio de Corredores</title>
     <link rel="stylesheet" href="css/estilos.css">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="js/clases.js"></script>
     <script src="js/funciones.js"></script>
 </head>
 
@@ -37,11 +39,11 @@ Obligatorio Programación 1 - 1er semestre 2025
                     <h3>Carreras</h3>
 
                     <label for="idNombreCarrera">Nombre:</label>
-                    <input type="text" id="idNombreCarrera" name="nombreCarrera">
+                    <input type="text" id="idNombreCarrera" name="nombreCarrera" required>
 
                     <label for="idDepartamentos">Departamento:</label>
-                    <select name="departamentos" id="idDepartamentos">
-                        <option value="1">Montevideo</option>
+                    <select name="departamentos" id="idDepartamentos" required>
+                        <option selected value="1">Montevideo</option>
                         <option value="2">Canelones</option>
                         <option value="3">Maldonado</option>
                         <option value="4">Rocha</option>
@@ -63,10 +65,10 @@ Obligatorio Programación 1 - 1er semestre 2025
                     </select>
 
                     <label for="idFechaCarrera">Fecha:</label>
-                    <input type="date" id="idFechaCarrera" name="fechaCarrera">
+                    <input type="date" id="idFechaCarrera" name="fechaCarrera" required>
 
                     <label for="idCupoCarrera">Cupo:</label>
-                    <input type="number" id="idCupoCarrera" name="cupoCarrera" min="1" max="1000" value="30">
+                    <input type="number" id="idCupoCarrera" name="cupoCarrera" min="1" max="1000" value="30" required>
 
                     <input type="button" id="idBtnAgregarCarrera" name="btnAgregarCarrera" value="Agregar carrera">
                 </form>
@@ -77,11 +79,11 @@ Obligatorio Programación 1 - 1er semestre 2025
                     <h3>Patrocinadores</h3>
 
                     <label for="idNombrePatrocinador">Nombre</label>
-                    <input type="text" id="idNombrePatrocinador" name="nombrePatrocinador">
+                    <input type="text" id="idNombrePatrocinador" name="nombrePatrocinador" required>
 
                     <label for="idRubroPatrocinador">Rubro:</label>
-                    <select name="rubroPatrocinador" id="idRubroPatrocinador">
-                        <option value="alimenticio">Alimenticio</option>
+                    <select name="rubroPatrocinador" id="idRubroPatrocinador" required>
+                        <option selected value="alimenticio">Alimenticio</option>
                         <option value="banco">Banco</option>
                         <option value="bebidas">Bebidas</option>
                         <option value="farmacia">Farmacia</option>
@@ -90,11 +92,10 @@ Obligatorio Programación 1 - 1er semestre 2025
                         <option value="general">General</option>
                     </select>
 
-                    <label>Carreras:</label>    
-                    <select multiple size="4" class="select-peq" id="idCarrerasPatrocinio"></select>
+                    <label>Carreras:</label>
+                    <select multiple size="4" class="select-peq" id="idCarrerasPatrocinio" required></select>
 
-                    <input type="button" id="idBtnAgregarPatrocinador" value="Agregar/actualizar patrocinador"
-                        name="btnAgregarPatrocinador">
+                    <input type="button" id="idBtnAgregarPatrocinador" name="btnAgregarPatrocinador" value="Agregar patrocinador">
                 </form>
             </article>
 
@@ -103,16 +104,16 @@ Obligatorio Programación 1 - 1er semestre 2025
                     <h3>Corredores</h3>
 
                     <label for="idNombreCorredor">Nombre:</label>
-                    <input type="text" id="idNombreCorredor" name="nombreCorredor">
+                    <input type="text" id="idNombreCorredor" name="nombreCorredor" required>
 
                     <label for="idEdadCorredor">Edad:</label>
-                    <input type="number" id="idEdadCorredor" name="edadCorredor" min="18">
+                    <input type="number" id="idEdadCorredor" name="edadCorredor" min="18" required>
 
                     <label for="idCedulaCorredor">Cédula:</label>
-                    <input type="number" id="idCedulaCorredor" name="cedulaCorredor">
+                    <input type="number" id="idCedulaCorredor" name="cedulaCorredor" required>
 
                     <label for="idFechaFicha">Fecha de vencimiento de ficha médica:</label>
-                    <input type="date" id="idFechaFicha" name="fechaFicha">
+                    <input type="date" id="idFechaFicha" name="fechaFicha" required>
 
                     <div class="fila">
                         <label>Tipo de corredor:</label>
@@ -131,12 +132,12 @@ Obligatorio Programación 1 - 1er semestre 2025
                     <h3>Inscripciones</h3>
 
                     <label for="idCorredoresInscribir">Corredores</label>
-                    <select name="corredoresInscribir" id="idCorredoresInscribir" class="select-peq"></select>
+                    <select name="corredoresInscribir" id="idCorredoresInscribir" class="select-peq" required></select>
 
                     <label for="idCarrerasInscribir">Carreras</label>
-                    <select name="carrerasInscribir" id="idCarrerasInscribir" class="select-peq"></select>
+                    <select name="carrerasInscribir" id="idCarrerasInscribir" class="select-peq" required></select>
 
-                    <input type="button" id="idBtnInscribir" name="btnInscribir" value="Inscribir">
+                    <input type="button" id="idBtnInscribir" name="btnInscribir" value="Inscribir corredor">
                 </form>
             </article>
         </section>
@@ -148,18 +149,17 @@ Obligatorio Programación 1 - 1er semestre 2025
                 <h3>Datos generales</h3>
                 <p>Promedio de inscriptos por carreras: Sin datos</p>
                 <p>Carrera/s con más inscriptos</p>
-                <ul id="idMasInscriptos">
-                    <li>• Sin datos</li>
+                <ul id="idMasInscriptos" class="sin">
+                    <li>Sin datos</li>
                 </ul>
                 <p>Carreras sin inscriptos ordenadas por fecha</p>
-                <ul id="idCarrerasSinInscriptos">
-                    <li>• Sin datos</li>
+                <ul id="idCarrerasSinInscriptos" class="sin">
+                    <li>Sin datos</li>
                 </ul>
                 <p id="idPorcentajeElite">Porcentaje de corredores de élite: Sin datos</p>
             </article>
 
             <article>
-                <form>
                     <h3>Consulta de inscriptos</h3>
 
                     <label for="idConsultaCarrera">Carrera</label>
@@ -186,23 +186,17 @@ Obligatorio Programación 1 - 1er semestre 2025
                                 <th><b>Número</b></th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody id="idTablaInscriptos"></tbody>
                     </table>
-                </form>
             </article>
 
             <article>
-                <form>
-                    <h3>Visualizar mapa:</h3>
-                    <div class="sin">
-                        <input type="radio" name="mapa" id="idMapaCarreras" checked>
-                        <label for="idMapaCarreras">Por carreras</label>
-                        <input type="radio" name="mapa" id="idMapaInscripciones">
-                        <label for="idMapaInscripciones">Por inscripciones</label>
-                    </div>
-
-                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-                </form>
+                <h3>Visualizar mapa:</h3>
+                <div class="sin">
+                    <input type="radio" name="modo" onclick="cambiarModo('carreras')" checked> Por Carreras
+                    <input type="radio" name="modo" onclick="cambiarModo('inscripciones')"> Por Inscripciones
+                </div>
+                <div id="mapa" style="width: 800px; height: 500px; margin-top: 20px;"></div>
             </article>
         </section>
     </main>

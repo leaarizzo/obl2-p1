@@ -81,3 +81,23 @@ table.sin th {
   background-color: #444;
   color: white;
 }
+
+input[type="text"],
+input[type="number"],
+input[type="date"]{
+    width: 150px;
+    padding: 2px;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+select {
+    width: 100px;
+    padding: 2px;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+
+input[type="button"] {
+    padding: 2px 5px;
+    font-size: 12px;
+}   

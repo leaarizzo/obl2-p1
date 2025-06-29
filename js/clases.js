@@ -14,7 +14,7 @@ class Carrera {
     }
 
     cupoDisponible() {
-        return cupoDispoinible = this.cupoMax - this.inscriptos.length;
+        return this.cupoMax - this.inscriptos.length;
     }
 
     tieneCupo() {
@@ -42,10 +42,10 @@ class Corredor {
 }
 
 class Patrocinador {
-    constructor(nombre, rubro, carreraApoyo) {
+    constructor(nombre, rubro, carrerasApoyadas) {
         this.nombre = nombre;
         this.rubro = rubro;
-        this.carreraApoyo = carreraApoyo;
+        this.carrerasApoyadas = carrerasApoyadas;
     }
 }
 
@@ -59,6 +59,16 @@ class Inscripcion {
     agregarInscriptoNumero() {
         this.numero = this.carrera.inscriptos.length + 1;
     }
+
+    compararPorNombre(otro) {
+        return this.corredor.nombre.localeCompare(otro.corredor.nombre);
+    }
+
+
+    compararPorNumero(otro) {
+        return this.numero - otro.numero;
+    }
+
 }
 
 class Sistema {
@@ -69,15 +79,15 @@ class Sistema {
         this.listaInscriptos = [];
     }
 
-    agrergarCarrera(carrera) {
+    agregarCarrera(carrera) {
         this.listaCarreras.push(carrera);
     }
 
-    agrergarCorredor(corredor) {
+    agregarCorredor(corredor) {
         this.listaCorredores.push(corredor);
     }
 
-    agrergarPatrocinador(patrocinador) {
+    agregarPatrocinador(patrocinador) {
         this.listaPatrocinadores.push(patrocinador);
     }
 
@@ -90,6 +100,7 @@ class Sistema {
         for (let elemCI of this.listaCorredores) {
             if (cedula == elemCI.cedula) {
                 esUnico = false;
+                break;
             }
         }
         return esUnico;
@@ -100,6 +111,7 @@ class Sistema {
         for (let elemCN of this.listaCarreras) {
             if (carreraNombre == elemCN.nombre) {
                 esUnica = false;
+                break;
             }
         }
         return esUnica;
@@ -110,49 +122,53 @@ class Sistema {
         for (let elemIns of this.listaInscriptos) {
             if (elemIns.corredor.cedula == corredorCI && elemIns.carrera.nombre == carreraNombre) {
                 esUnica = false;
+                break;
             }
         }
         return esUnica;
     }
 
+    patrocinadorUnico(nombrePatrocinador) {
+        let esUnico = true;
+        for (let elemPN of this.listaPatrocinadores) {
+            if (nombrePatrocinador == elemPN.nombre) {
+                esUnico = false;
+                break;
+            }
+        }
+        return esUnico;
+    }
+
     eliminarPatrocinador(nombrePatrocinador) {
         for (let i = 0; i < this.listaPatrocinadores.length; i++) {
-            if (nombrePatrocinador == this.listaPatrocinadores[i]) {
+            if (nombrePatrocinador == this.listaPatrocinadores[i].nombre) {
                 this.listaPatrocinadores.splice(i, 1);
                 break;
             }
         }
     }
 
-    buscarCorredor(corredorCI) {
-        let corredorObjeto = null;
-        for (let elemCI of this.listaCorredores) {
-            if (elemCI.cedula == corredorCI) {
-                corredorObjeto = elemCI;
+    buscarPatrocinador(nombre) {
+        let patrocinador = null;
+        for (let elemPC of this.listaPatrocinadores) {
+            if (elemPC.nombre == nombre) {
+                patrocinador = elemPC;
+                break;
             }
         }
-        return corredorObjeto;
-    }
-
-    buscarCarrera(carreraNombre) {
-        let carreraObjeto = null;
-        for (let elemC of this.listaCarreras) {
-            if (elemC.nombre == carreraNombre) {
-                carreraObjeto = elemC;
-            }
-        }
-        return carreraObjeto;
+        return patrocinador;
     }
 
     carrerasMasInscriptos() {
-        let carreraMax = ["sin datos"];
+        let carreraMax = ["Sin datos"];
         let maxInscriptos = 0;
         for (let elemCMI of this.listaCarreras) {
-            if (elemCMI.inscriptos.length < maxInscriptos) {
+            if (elemCMI.inscriptos.length > maxInscriptos) {
+                maxInscriptos = elemCMI.inscriptos.length;
                 carreraMax = [];
-                carreraMax.push();
+                carreraMax.push(elemCMI);
             } else if (elemCMI.inscriptos.length == maxInscriptos && maxInscriptos != 0) {
-                carreraMax.push();
+                carreraMax.push(elemCMI);
             }
         }
         return carreraMax;
@@ -160,43 +176,83 @@ class Sistema {
 
     promedioInscriptosPorCarrera() {
         let totalInscriptos = 0;
-        for (let carrera of this.listaCarreras) {
-            totalInscriptos += carrera.inscriptos.length;
+        let respuesta = "No hay carreras registradas";
+        if (this.listaCarreras.length > 0) {
+            for (let carrera of this.listaCarreras) {
+                totalInscriptos += carrera.inscriptos.length;
+            }
+            respuesta = (totalInscriptos / this.listaCarreras.length).toFixed(2);
         }
-        return (totalInscriptos / this.listaCarreras.length).toFixed(2);
+        return respuesta;
     }
+
 
     carrerasVaciasPorFecha() {
         let carrerasVaciasOrdenadas = [];
         for (let carrera of this.listaCarreras) {
             if (carrera.inscriptos.length == 0) {
                 carrerasVaciasOrdenadas.push(carrera);
-                carrerasVaciasOrdenadas.sort(function (a, b) {
-                    return a.compararPorFecha(b);
-                });
             }
         }
-
+        carrerasVaciasOrdenadas.sort(function (a, b) {
+            return a.compararPorFecha(b);
+        });
         return carrerasVaciasOrdenadas;
     }
 
     porcentajeElite() {
-        let totalElite = 0;
-        let totalComun = 0;
-        let respuesta = "No hay corredores comunes";
+        let elite = 0;
+        let total = this.listaCorredores.length;
+        let respuesta = "No hay corredores registrados";
         for (let elemEl of this.listaCorredores) {
             if (elemEl.tipoDeportista == "elite") {
-                totalElite++;
-            } else if (elemEl.tipoDeportista == "comun") {
-                totalComun++;
+                elite++;
             }
         }
 
-        if (totalComun != 0) {
-            respuesta = totalElite * 100 / totalComun;
+        if (total != 0) {
+            respuesta = ((elite * 100) / total).toFixed(2);
         }
 
         return respuesta;
     }
 
-}   
+    ordenarInscriptosPorNombre(carrera) {
+
+        let inscriptos = carrera.inscriptos.slice();
+        inscriptos.sort(function (a, b) {
+            return a.compararPorNombre(b);
+        });
+
+        return inscriptos;
+    }
+
+    ordenarInscriptosPorNumero(carrera) {
+
+        let inscriptos = carrera.inscriptos.slice();
+        inscriptos.sort(function (a, b) {
+            return a.compararPorNumero(b);
+        });
+
+        return inscriptos;
+    }
+
+    compararArraysCarreras(arrayCarreraActual, arrayCarreraViejo) {
+        let carreraActual = arrayCarreraActual.length;
+        let carreraVieja = arrayCarreraViejo.length;
+        let iguales = 0;
+        if (carreraActual == carreraVieja) {
+            for (let elemCA of arrayCarreraActual) {
+                if (arrayCarreraViejo.includes(elemCA)) {
+                    iguales++;
+                } else {
+                    break;
+                }
+            }
+        }
+        return iguales == carreraActual;
+    } 
+
+}
+
+

@@ -5,7 +5,7 @@ Obligatorio Programación 1 - 1er semestre 2025
 */
 
 window.addEventListener("load", inicio);
-let sistema = new sistema();
+let sistema = new Sistema();
 
 function inicio() {
     document.getElementById("idBtnAgregarCarrera").addEventListener("click", agregarCarrera);
@@ -22,52 +22,84 @@ function inicio() {
     document.getElementById("idBtnEstadisticas").onclick = mostrarEstadisticas;
 }
 
-function agregarCarrera() {
+function agregarCarrera() { //podrian llamarse igual pero ser otro dia? o igual pero con distito departamento?
     if (document.getElementById("idFormCarreras").reportValidity()) {
         let nombre = document.getElementById("idNombreCarrera").value;
+        nombre = nombre.trim();
         let departamento = document.getElementById("idDepartamentos").value;
         let fecha = document.getElementById("idFechaCarrera").value;
         let fechaObjeto = new Date(fecha);
         let cupoMax = document.getElementById("idCupoCarrera").value;
 
         if (sistema.carreraUnica(nombre)) {
-            sistema.agregarCarrera(new Carrera(nombre, departamento, fechaObjeto, cupoMax));
+            let carrera = new Carrera(nombre, departamento, fechaObjeto, cupoMax);
+            sistema.agregarCarrera(carrera);
+            alert("¡Carrera agregada exitosamente!");
             document.getElementById("idFormCarreras").reset();
+            cargar();
         }
         else {
             alert("¡La carrera ya existe!")
         }
-
     }
 }
 
 function agregarPatrocinador() {
     if (document.getElementById("idFormPatrocinadores").reportValidity()) {
         let nombre = document.getElementById("idNombrePatrocinador").value;
+        nombre = nombre.trim();
         let rubro = document.getElementById("idRubroPatrocinador").value;
-        let carreraApoyo = document.getElementById("idCarrerasPatrocinio").value;
-        sistema.eliminarPatrocinador(nombre);
-        sistema.agregarPatrocinador(new Patrocinador(nombre, rubro, carreraApoyo));
+        let comboCarreras = document.getElementById("idCarrerasPatrocinio");
+        let carrerasApoyadas = [];
+        for (let i = 0; i < comboCarreras.options.length; i++) {
+            if (comboCarreras.options[i].selected) {
+                carrerasApoyadas.push(sistema.listaCarreras[i]);
+            }
+        }
+
+        if (carrerasApoyadas.length === 0) {
+            alert("Debe seleccionar al menos una carrera para el patrocinador");
+        } else {
+            if (sistema.patrocinadorUnico(nombre)) {
+                let patrocinador = new Patrocinador(nombre, rubro, carrerasApoyadas);
+                sistema.agregarPatrocinador(patrocinador);
+                alert("¡Patrocinador agregado exitosamente!");
+                document.getElementById("idFormPatrocinadores").reset();
+
+            } else if (rubro == sistema.buscarPatrocinador(nombre).rubro && sistema.compararArraysCarreras(carrerasApoyadas, sistema.buscarPatrocinador(nombre).carrerasApoyadas)) {
+                alert("¡Debes cambiar algo para actualizarlo!");
+
+            } else {
+                sistema.eliminarPatrocinador(nombre);
+                let patrocinador = new Patrocinador(nombre, rubro, carrerasApoyadas);
+                sistema.agregarPatrocinador(patrocinador);
+                alert("¡El patrocinador actualizado exitosamente!");
+                document.getElementById("idFormPatrocinadores").reset();
+            }
+        }
     }
 }
-
 function agregarCorredor() {
     if (document.getElementById("idFormCorredores").reportValidity()) {
         let nombre = document.getElementById("idNombreCorredor").value;
+        nombre = nombre.trim();
         let edad = document.getElementById("idEdadCorredor").value;
         let cedula = document.getElementById("idCedulaCorredor").value;
         let vencimientoFicha = document.getElementById("idFechaFicha").value;
         let vencimientoFichaObjeto = new Date(vencimientoFicha);
         let tipoDeportista = "";
-        if (document.getElementById("idTipoDeportistaComun").checked) {
+        if (document.getElementById("idComun").checked) {
             tipoDeportista = "comun";
-        } else {
+        } else if (document.getElementById("idElite").checked) {
             tipoDeportista = "elite";
         }
 
-        if (sistema.corredorUnica(cedula)) {
-            sistema.agregarCorredor(new Corredor(nombre, edad, cedula, vencimientoFichaObjeto, tipoDeportista));
-            document.getElementById("idFormCorredor").reset();
+        if (sistema.corredorUnico(cedula)) {
+            let corredor = new Corredor(nombre, edad, cedula, vencimientoFichaObjeto, tipoDeportista);
+            sistema.agregarCorredor(corredor);
+            document.getElementById("idFormCorredores").reset();
+            alert("¡Corredor agregado exitosamente!");
+            cargar();
         }
         else {
             alert("¡El corredor ya existe!")
@@ -78,25 +110,35 @@ function agregarCorredor() {
 
 function inscribir() {
     if (document.getElementById("idFormInscribir").reportValidity()) {
-        let corredorIndex = document.getElementById("idCorredoresInscribir").value;
-        let carreraIndex = document.getElementById("idCarrerasInscribir").value;
-        let corredorObjeto = sistema.listaCorredores[corredorIndex];
-        let carreraObjeto = sistema.listaCarreras[carreraIndex];
-        if (carreraObjeto.tieneCupo() && corredorObjeto.vencimientoFicha - carreraObjeto.fecha > 0) {
-            if (sistema.inscripcionUnica(corredorCI, carreraNombre)) {
-                let inscripcion = new Inscripcion(corredorObjeto, carreraObjeto);
-                inscripcion.agregarInscriptoNumero();
-                sistema.agregarInscripcion(inscripcion);
-                carreraObjeto.agregarInscripto(corredorObjeto);
-                alert("¡Inscripción exitosa!");
-                document.getElementById("idFormInscribir").reset();
-            } else {
-                alert("¡El corredor ya está inscripto en la carrera seleccionada!");
-            }
-        } else if (!carreraObjeto.tieneCupo()) {
-            alert("¡No hay cupo disponible en la carrera seleccionada!");
+        let comboCorredores = document.getElementById("idCorredoresInscribir");
+        let comboCarreras = document.getElementById("idCarrerasInscribir");
+        let corredorIndex = comboCorredores.selectedIndex;
+        let corredor = sistema.listaCorredores[corredorIndex];
+        let carreraIndex = comboCarreras.selectedIndex;
+        let carrera = sistema.listaCarreras[carreraIndex];
+
+        if (corredorIndex === -1 || carreraIndex === -1) {
+            alert("Debe seleccionar un corredor y una carrera");
         } else {
-            alert("¡La ficha del corredor está vencida!");
+            if (carrera.tieneCupo() && corredor.vencimientoFicha - carrera.fecha > 0) {
+                let corredorCI = corredor.cedula;
+                let carreraNombre = carrera.nombre;
+                if (sistema.inscripcionUnica(corredorCI, carreraNombre)) {
+                    let inscripcion = new Inscripcion(corredor, carrera);
+                    inscripcion.agregarInscriptoNumero();
+                    sistema.agregarInscriptos(inscripcion);
+                    carrera.agregarInscripto(inscripcion);
+                    cargar();
+                    alert("¡Inscripción exitosa!");
+                    document.getElementById("idFormInscribir").reset();
+                } else {
+                    alert("¡El corredor ya está inscripto en la carrera seleccionada!");
+                }
+            } else if (!carrera.tieneCupo()) {
+                alert("¡No hay cupo disponible en la carrera seleccionada!");
+            } else {
+                alert("¡La ficha del corredor está vencida!");
+            }
         }
     }
 }
@@ -113,116 +155,243 @@ function mostrarEstadisticas() {
     document.getElementById("idSeccionEstadisticas").classList.remove("oculto");
     document.getElementById("idBtnDatos").classList.remove("botonActivo");
     document.getElementById("idBtnEstadisticas").classList.add("botonActivo");
+
+     drawRegionsMap(); //Carga el mapa
 }
 
-actualizar(){
-    cargarCombosCarrera();
-    cargarCombosCorredores();
-    cargarCarreraConMasInscriptos();
-    cargarCarrerasSinInscriptosPorFecha();
-    cargarPorcentajeELite();
-    cargarTabla();
-    cargarMapa();
+function cargar() {
+    cargarCombosPatrocinadoresCarreras();
+    cargarCombosInscripcionesCarreras();
+    cargarCombosInscripcionesCorredores();
+    cargarCombosConsultaInscriptosCarreras();
+    cargarCarrerasConMasInscriptos();
 }
 
 
-cargarCombosCarrera(){
-
-}
-
-cargarCombosCorredores(){
-
-}
-
-cargarTablaPorNumero(){
-
-}
-
-cargarTablaPorNombre(){
-
-}
-
-cargarTabla(){
-    if (document.getElementById("idComboTabla").value == "numero") {
-        cargarTablaPorNumero();
-    } else if (document.getElementById("idComboTabla").value == "nombre") {
-        cargarTablaPorNombre();
+function cargarCombosConsultaInscriptosCarreras() {
+    let comboCarreras = document.getElementById("idConsultaCarrera");
+    comboCarreras.innerHTML = "";
+    for (let carrera of sistema.listaCarreras) {
+        let nodo = document.createElement("option");
+        let nodoTexto = document.createTextNode(carrera.nombre);
+        nodo.appendChild(nodoTexto);
+        comboCarreras.appendChild(nodo);
     }
 }
 
 
-
-function agregarInscriptosEnTabla(texto) {
-    if (){
-
+function cargarCombosPatrocinadoresCarreras() {
+    let comboCarreras = document.getElementById("idCarrerasPatrocinio");
+    comboCarreras.innerHTML = "";
+    for (let carrera of sistema.listaCarreras) {
+        let nodo = document.createElement("option");
+        let nodoTexto = document.createTextNode(carrera.nombre);
+        nodo.appendChild(nodoTexto);
+        comboCarreras.appendChild(nodo);
     }
-    let tabla = document.getElementById("idTablaInscriptos"); // agarro la tabla
-    let fila = tabla.insertRow();
-    let celda1 = fila.insertCell();
-    let celda2 = fila.insertCell();
-    let celda3 = fila.insertCell(); 
-    let celda4 = fila.insertCell(); 
-    let celda5 = fila.insertCell(); 
-    celda1.innerHTML = nombre; 
-    celda2.innerHTML = texto;
-    celda3.innerHTML = texto;
-    celda4.innerHTML = texto;
-    celda5.innerHTML = texto;
 }
 
-cargarCarrerasConMasInscriptos(){
-    let lista = document.getElementById("idCarrerasMasInscriptos");
+
+function cargarCombosInscripcionesCorredores() {
+    let comboCorredores = document.getElementById("idCorredoresInscribir");
+    comboCorredores.innerHTML = "";
+    for (let corredor of sistema.listaCorredores) {
+        let nodo = document.createElement("option");
+        let nodoTexto = document.createTextNode(corredor.nombre + " - " + corredor.cedula);
+        nodo.appendChild(nodoTexto);
+        comboCorredores.appendChild(nodo);
+    }
+}
+
+function cargarCombosInscripcionesCarreras() {
+    let comboCarreras = document.getElementById("idCarrerasInscribir");
+    comboCarreras.innerHTML = "";
+    for (let carrera of sistema.listaCarreras) {
+        let nodo = document.createElement("option");
+        let nodoTexto = document.createTextNode(carrera.nombre + " - " + carrera.fecha.toLocaleDateString());
+        nodo.appendChild(nodoTexto);
+        comboCarreras.appendChild(nodo);
+    }
+}
+
+
+function cargarInscriptosEnTabla() {
+    let combo = document.getElementById("idConsultaCarrera");
+    let carreraIndex = combo.selectedIndex;
+    let carrera = sistema.listaCarreras[carreraIndex];
+    let tabla = document.getElementById("idTablaInscriptos");
+    tabla.innerHTML = "";
+    let inscripciones = [];
+    if (document.getElementById("idNombreOrden").checked) {
+        inscripciones = sistema.ordenarInscriptosPorNombre(carrera);
+    } else if (document.getElementById("idNumeroOrden").checked) {
+        inscripciones = sistema.ordenarInscriptosPorNumero(carrera);
+    }
+    for (let inscripcion of inscripciones) {
+        let fila = tabla.insertRow();
+        let celda1 = fila.insertCell();
+        let celda2 = fila.insertCell();
+        let celda3 = fila.insertCell();
+        let celda4 = fila.insertCell();
+        let celda5 = fila.insertCell();
+        celda1.innerHTML = inscripcion.corredor.nombre;
+        celda2.innerHTML = inscripcion.corredor.edad;
+        celda3.innerHTML = inscripcion.corredor.cedula;
+        celda4.innerHTML = inscripcion.corredor.vencimientoFicha;
+        celda5.innerHTML = inscripcion.numero;
+    }
+
+}
+
+function cargarCarrerasConMasInscriptos() {
+    let lista = document.getElementById("idMasInscriptos");
     lista.innerHTML = "";
     let datos = sistema.carrerasMasInscriptos();
-    for (let elem of datos) {
+    for (let elemCMI of datos) {
         let nodo = document.createElement("LI");
-        let nodoTexto = document.createTextNode(elem);
+        let nodoTexto = document.createTextNode(elemCMI.nombre + " - " + elemCMI.inscriptos.length + " inscriptos");
         nodo.appendChild(nodoTexto);
         lista.appendChild(nodo);
     }
+
 }
 
 
 
-cargarCarrerasSinInscriptosPorFecha(){
+function cargarCarrerasSinInscriptosPorFecha() {
     let lista = document.getElementById("idCarrerasSinInscriptos");
     lista.innerHTML = "";
-    let datos = sistema.carrerasSinInscriptosPorFecha();
+    let datos = sistema.carrerasVaciasPorFecha();
     for (let elem of datos) {
         let nodo = document.createElement("LI");
-        let nodoTexto = document.createTextNode(elem);
+        let nodoTexto = document.createTextNode(elem.nombre + " - " + elem.fecha.toLocaleDateString());
         nodo.appendChild(nodoTexto);
         lista.appendChild(nodo);
     }
 }
 
 
-cargarPorcentajeEElite(){
+function cargarPorcentajeElite() {
     let porcentaje = sistema.porcentajeElite();
     document.getElementById("idPorcentajeElite").innerHTML = "Porcentaje de corredores élite: " + porcentaje + "%";
-
 }
 
-cargarPromedioInscriptosPorCarrera() {
+function cargarPromedioInscriptosPorCarrera() {
     let promedio = sistema.promedioInscriptosPorCarrera();
     document.getElementById("idPromedioInscriptos").innerHTML = "Promedio de inscriptos por carrera: " + promedio;
 }
 
-/*
-cargarMapaPorCarreras(){
+google.charts.load('current', {
+    packages: ['geochart']
+});
 
+google.charts.setOnLoadCallback(drawRegionsMap);
+
+let modo = 'carreras';
+
+function drawRegionsMap() {
+    let data = google.visualization.arrayToDataTable(getData());
+
+    let options = {
+        region: 'UY',
+        resolution: 'provinces',
+        colorAxis: { colors: ['#dbeafe', '#1e3a8a'] }, // azul claro a oscuro
+        datalessRegionColor: '#e0f2fe',
+        tooltip: { isHtml: true }
+    };
+
+    let chart = new google.visualization.GeoChart(document.getElementById('mapa'));
+    chart.draw(data, options);
 }
 
-cargarMapaPorInscripciones(){
+function getData() {
+    let codigosDepartamentos = {
+        1: 'UY-MO',
+        2: 'UY-CA',
+        3: 'UY-MA',
+        4: 'UY-RO',
+        5: 'UY-TT',
+        6: 'UY-CL',
+        7: 'UY-RV',
+        8: 'UY-AR',
+        9: 'UY-SA',
+        10: 'UY-PA',
+        11: 'UY-RN',
+        12: 'UY-SO',
+        13: 'UY-CO',
+        14: 'UY-SJ',
+        15: 'UY-FS',
+        16: 'UY-FD',
+        17: 'UY-LA',
+        18: 'UY-DU',
+        19: 'UY-TA'
+    };
 
-}
+    let nombresDepartamentos = {
+        1: "Montevideo",
+        2: "Canelones",
+        3: "Maldonado",
+        4: "Rocha",
+        5: "Treinta y Tres",
+        6: "Cerro Largo",
+        7: "Rivera",
+        8: "Artigas",
+        9: "Salto",
+        10: "Paysandú",
+        11: "Río Negro",
+        12: "Soriano",
+        13: "Colonia",
+        14: "San José",
+        15: "Flores",
+        16: "Florida",
+        17: "Lavalleja",
+        18: "Durazno",
+        19: "Tacuarembó"
+    };
 
-cargarMapa() {
-    if (document.getElementById("idComboMapa").value == "carreras") {
-        cargarMapaPorCarreras();
-    } else if (document.getElementById("idComboMapa").value == "inscripciones") {
-        cargarMapaPorInscripciones();
+    let conteo = {};
+    for (let i = 1; i <= 19; i++) {
+        let cod = codigosDepartamentos[i];
+        conteo[cod] = 0;
     }
-}
-*/
 
+    if (modo === 'carreras') {
+        for (let carrera of sistema.listaCarreras) {
+            let depto = parseInt(carrera.departamento);
+            let cod = codigosDepartamentos[depto];
+            if (cod) {
+                conteo[cod]++;
+            }
+        }
+    } else {
+        for (let inscripto of sistema.listaInscriptos) {
+            let carrera = inscripto.carrera;
+            let depto = parseInt(carrera.departamento);
+            let cod = codigosDepartamentos[depto];
+            if (cod) {
+                conteo[cod]++;
+            }
+        }
+    }
+
+    let resultado = [[
+        'Region',
+        modo === 'carreras' ? 'Carreras' : 'Inscriptos',
+        { role: 'tooltip', type: 'string', p: { html: true } }
+    ]];
+
+    for (let i = 1; i <= 19; i++) {
+        let cod = codigosDepartamentos[i];
+        let nombre = nombresDepartamentos[i];
+        let cantidad = conteo[cod];
+        let textoTooltip = `<strong>${nombre}</strong><br>${cantidad} ${modo === 'carreras' ? 'carreras' : 'inscriptos'}`;
+        resultado.push([cod, cantidad, textoTooltip]);
+    }
+
+    return resultado;
+}
+
+function cambiarModo(nuevoModo) {
+    modo = nuevoModo;
+    drawRegionsMap();
+}
