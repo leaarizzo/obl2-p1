@@ -73,6 +73,11 @@ table.sin th, td {
     width: 70px;
 }
 
+select {
+    width: 100px;
+}
+
+
 .hide {
   display: none;
 }

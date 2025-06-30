@@ -43,14 +43,15 @@ function agregarCarrera() {
     if (document.getElementById("idFormCarreras").reportValidity()) {
         let nombre = document.getElementById("idNombreCarrera").value;
         nombre = nombre.trim();
-        let departamento = document.getElementById("idDepartamentos").value;
+        let departamentoIndex = document.getElementById("idDepartamentos").value;
+        let departamento = obtenerNombreDepartamento(departamentoIndex);
         let fecha = document.getElementById("idFechaCarrera").value;
         let fechaObjeto = new Date(fecha);
         let cupoMax = document.getElementById("idCupoCarrera").value;
         let hoy = new Date();
 
         if (sistema.carreraUnica(nombre)) {
-            if (fecha - hoy > 0) {
+            if (fechaObjeto - hoy > 0) {
                 let carrera = new Carrera(nombre, departamento, fechaObjeto, cupoMax);
                 sistema.agregarCarrera(carrera);
                 alert("¡Carrera agregada exitosamente!");
@@ -111,9 +112,9 @@ function agregarCorredor() {
         let vencimientoFichaObjeto = new Date(vencimientoFicha);
         let tipoDeportista = "";
         if (document.getElementById("idComun").checked) {
-            tipoDeportista = "comun";
+            tipoDeportista = "Común";
         } else if (document.getElementById("idElite").checked) {
-            tipoDeportista = "elite";
+            tipoDeportista = "Élite";
         }
 
         if (sistema.corredorUnico(cedula)) {
@@ -152,19 +153,17 @@ function inscribir() {
                     carrera.agregarInscripto(inscripcion);
                     cargar();
                     alert("¡Inscripción exitosa!");
-                    let patrocinadoresTexto = sistema.patrocinadoresCarrera(carrera);
+                    let datosPatrocinadores = sistema.patrocinadoresCarrera(carrera);
 
                     alert(
-                        "Nro en la carrera: " + inscripcion.numero +
-                        " | Carrera: " + carrera.nombre +
-                        " | Departamento: " + obtenerNombreDepartamento(carrera.departamento) +
-                        " | Fecha: " + carrera.fecha.toLocaleDateString() +
-                        " | Patrocinadores de la carrera: " + patrocinadoresTexto +
-                        " | Nombre del corredor: " + corredor.nombre +
-                        " | Cédula del corredor: " + corredor.cedula +
-                        " | Edad del corredor: " + corredor.edad +
-                        " | Tipo de deportista: " + corredor.tipoDeportista +
-                        " | Vencimiento de la ficha medica: " + corredor.vencimientoFicha.toLocaleDateString()
+                        "Número: " + inscripcion.numero + "\n" +
+                        "Nombre: " + corredor.nombre + " "  + corredor.edad + " años" + ", " +
+                        "CI: " + corredor.cedula +
+                        " Ficha Médica: " + corredor.vencimientoFicha.toLocaleDateString() + "\n" + 
+                        corredor.tipoDeportista + "\n" +
+                        "Carrera: " + carrera.nombre + " en " + carrera.departamento + 
+                        " el " + carrera.fecha.toLocaleDateString() + " Cupo: " + carrera.cupoMax + "\n" +
+                        datosPatrocinadores.patrocinadores + " (" + datosPatrocinadores.rubro + ")"
                     );
 
                     generarPDFInscriptos(inscripcion);
@@ -282,7 +281,7 @@ function cargarInscriptosEnTabla() {
             celda3.innerHTML = inscripcion.corredor.cedula;
             celda4.innerHTML = inscripcion.corredor.vencimientoFicha.toLocaleDateString();
             celda5.innerHTML = inscripcion.numero;
-            if (inscripcion.corredor.tipoDeportista == "elite") {
+            if (inscripcion.corredor.tipoDeportista == "Élite") {
                 fila.classList.add("rojo");
             }
         }
@@ -365,18 +364,20 @@ function getData() {
 
     if (modo == 'carreras') {
         for (let carrera of sistema.listaCarreras) {
-            let depto = parseInt(carrera.departamento);
-            let cod = codigosDepartamentos[depto - 1];
-            if (cod) {
+            // CAMBIO: Buscar el índice del departamento por nombre
+            let indexDepto = nombresDepartamentos.indexOf(carrera.departamento);
+            if (indexDepto !== -1) {
+                let cod = codigosDepartamentos[indexDepto];
                 conteo[cod]++;
             }
         }
     } else {
         for (let inscripto of sistema.listaInscriptos) {
             let carrera = inscripto.carrera;
-            let depto = parseInt(carrera.departamento);
-            let cod = codigosDepartamentos[depto - 1];
-            if (cod) {
+            // CAMBIO: Buscar el índice del departamento por nombre
+            let indexDepto = nombresDepartamentos.indexOf(carrera.departamento);
+            if (indexDepto !== -1) {
+                let cod = codigosDepartamentos[indexDepto];
                 conteo[cod]++;
             }
         }
@@ -414,19 +415,22 @@ function cambiarModo(nuevoModo) {
 function generarPDFInscriptos(inscripcion) {
     const doc = new window.jspdf.jsPDF();
 
+    let datosPatrocinadores = sistema.patrocinadoresCarrera(inscripcion.carrera);
+
     doc.setFontSize(16);
     doc.text("Comprobante de Inscripción", 20, 10);
 
     doc.setFontSize(12);
     doc.text("Número de inscripción: " + inscripcion.numero, 20, 20);
     doc.text("Carrera: " + inscripcion.carrera.nombre, 20, 30);
-    doc.text("Patrocinadores de la carrera: " + sistema.patrocinadoresCarrera(inscripcion.carrera), 20, 40);
+    doc.text("Patrocinadores de la carrera: " + datosPatrocinadores.patrocinadores + " (" + datosPatrocinadores.rubro + ")", 20, 40);
     doc.text("Fecha: " + inscripcion.carrera.fecha.toLocaleDateString(), 20, 50);
-    doc.text("Departamento: " + obtenerNombreDepartamento(inscripcion.carrera.departamento), 20, 60);
+    doc.text("Departamento: " + inscripcion.carrera.departamento, 20, 60);
     doc.text("Corredor: " + inscripcion.corredor.nombre, 20, 70);
     doc.text("Cédula: " + inscripcion.corredor.cedula, 20, 80);
     doc.text("Edad: " + inscripcion.corredor.edad, 20, 90);
     doc.text("Tipo de corredor: " + inscripcion.corredor.tipoDeportista, 20, 100);
+    doc.text("Ficha médica válida hasta: " + inscripcion.corredor.vencimientoFicha.toLocaleDateString(), 20, 110);
 
     doc.save("inscripcion_" + inscripcion.corredor.cedula + "_" + inscripcion.carrera.nombre + ".pdf");
 }

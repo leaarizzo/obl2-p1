@@ -13,7 +13,7 @@ Obligatorio Programación 1 - 1er semestre 2025
     <title>Sitio de Corredores</title>
     <link rel="stylesheet" href="css/estilos.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.0/jspdf.umd.min.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="js/clases.js"></script>
     <script src="js/funciones.js"></script>
 </head>
@@ -44,7 +44,8 @@ Obligatorio Programación 1 - 1er semestre 2025
 
                     <label for="idDepartamentos">Departamento:</label>
                     <select name="departamentos" id="idDepartamentos" required>
-                        <option selected value="1">Montevideo</option>
+                        <option value="" disabled selected>Seleccione una opción</option>
+                        <option value="1">Montevideo</option>
                         <option value="2">Canelones</option>
                         <option value="3">Maldonado</option>
                         <option value="4">Rocha</option>
@@ -84,7 +85,8 @@ Obligatorio Programación 1 - 1er semestre 2025
 
                     <label for="idRubroPatrocinador">Rubro:</label>
                     <select name="rubroPatrocinador" id="idRubroPatrocinador" required>
-                        <option selected value="alimenticio">Alimenticio</option>
+                        <option value="" disabled selected>Seleccione una opción</option>
+                        <option value="alimenticio">Alimenticio</option>
                         <option value="banco">Banco</option>
                         <option value="bebidas">Bebidas</option>
                         <option value="farmacia">Farmacia</option>
@@ -105,7 +107,7 @@ Obligatorio Programación 1 - 1er semestre 2025
                 <form id="idFormCorredores">
                     <h3>Corredores</h3>
 
-                    <label for="idNombreCorredor">Nombre:</label>
+                    <label for="idNombreCorredor">Nombre:</label> <!-- Se permiten numeros en caso de que haya algun nombre particular -->
                     <input type="text" id="idNombreCorredor" name="nombreCorredor" required>
 
                     <label for="idEdadCorredor">Edad:</label>
@@ -134,10 +136,14 @@ Obligatorio Programación 1 - 1er semestre 2025
                     <h3>Inscripciones</h3>
 
                     <label for="idCorredoresInscribir">Corredores</label>
-                    <select name="corredoresInscribir" id="idCorredoresInscribir" class="select-peq" required></select>
+                    <select name="corredoresInscribir" id="idCorredoresInscribir" required>
+                        <option value="" disabled selected>Seleccione un corredor</option>
+                    </select>
 
                     <label for="idCarrerasInscribir">Carreras</label>
-                    <select name="carrerasInscribir" id="idCarrerasInscribir" class="select-peq" required></select>
+                    <select name="carrerasInscribir" id="idCarrerasInscribir" required>
+                        <option value="" disabled selected>Seleccione una carrera</option>
+                    </select>
 
                     <input type="button" id="idBtnInscribir" name="btnInscribir" value="Inscribir corredor">
                 </form>
@@ -163,7 +169,6 @@ Obligatorio Programación 1 - 1er semestre 2025
             </article>
 
             <article>
-                <form>
                     <h3>Consulta de inscriptos</h3>
 
                     <label for="idConsultaCarrera">Carrera</label>
@@ -194,7 +199,6 @@ Obligatorio Programación 1 - 1er semestre 2025
                         </thead>
                         <tbody id="idTablaInscriptos"></tbody>
                     </table>
-                </form>
             </article>
 
             <article>

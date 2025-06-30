@@ -166,9 +166,13 @@ class Sistema {
             if (elemCMI.inscriptos.length > maxInscriptos) {
                 maxInscriptos = elemCMI.inscriptos.length;
                 carreraMax = [];
-                carreraMax.push(elemCMI.nombre + " - " + elemCMI.inscriptos.length + " inscriptos");
+                carreraMax.push(elemCMI.nombre + " en " + elemCMI.departamento + 
+                               " el " + elemCMI.fecha.toLocaleDateString() + " Cupo: " + elemCMI.cupoMax + 
+                               " inscriptos: " + elemCMI.inscriptos.length);
             } else if (elemCMI.inscriptos.length == maxInscriptos && maxInscriptos != 0) {
-                carreraMax.push(elemCMI.nombre + " - " + elemCMI.inscriptos.length + " inscriptos");
+                carreraMax.push(elemCMI.nombre + " en " + elemCMI.departamento + 
+                               " el " + elemCMI.fecha.toLocaleDateString() + " Cupo: " + elemCMI.cupoMax + 
+                               " inscriptos: " + elemCMI.inscriptos.length);
             }
         }
         return carreraMax;
@@ -182,7 +186,7 @@ class Sistema {
                 totalInscriptos += carrera.inscriptos.length;
             }
             respuesta = (totalInscriptos / this.listaCarreras.length).toFixed(2);
-        }
+        }   
         return respuesta;
     }
 
@@ -190,17 +194,20 @@ class Sistema {
     carrerasVaciasPorFecha() {
         let carrerasVaciasOrdenadas = [];
         let nombreYFechaVacias = [];
+        
         for (let carrera of this.listaCarreras) {
             if (carrera.inscriptos.length == 0) {
                 carrerasVaciasOrdenadas.push(carrera);
             }
         }
+        
         carrerasVaciasOrdenadas.sort(function (a, b) {
             return a.compararPorFecha(b);
         });
 
         for (let elemCVO of carrerasVaciasOrdenadas) {
-            nombreYFechaVacias.push(elemCVO.nombre + " - " + elemCVO.fecha.toLocaleDateString());
+            nombreYFechaVacias.push(elemCVO.nombre + " en " + elemCVO.departamento + 
+                                   " el " + elemCVO.fecha.toLocaleDateString() + " Cupo: " + elemCVO.cupoMax);
         }
 
         if (carrerasVaciasOrdenadas.length == 0) {
@@ -215,7 +222,7 @@ class Sistema {
         let total = this.listaCorredores.length;
         let respuesta = "Sin datos";
         for (let elemEl of this.listaCorredores) {
-            if (elemEl.tipoDeportista == "elite") {
+            if (elemEl.tipoDeportista == "Élite") {
                 elite++;
             }
         }
@@ -265,6 +272,8 @@ class Sistema {
 
     patrocinadoresCarrera(carrera) {
         let patrocinadoresTexto = "";
+        let rubroTexto = "";
+        
         if (this.listaPatrocinadores.length > 0) {
             for (let elemPT of this.listaPatrocinadores) {
                 if (elemPT.carrerasApoyadas.includes(carrera)) {
@@ -272,16 +281,20 @@ class Sistema {
                         patrocinadoresTexto += ", ";
                     }
                     patrocinadoresTexto += elemPT.nombre;
+                    rubroTexto = elemPT.rubro;
                 }
             }
 
             if (patrocinadoresTexto == "") {
                 patrocinadoresTexto = "Sin datos";
+                rubroTexto = "Sin datos";
             }
         } else {
             patrocinadoresTexto = "Sin datos";
+            rubroTexto = "Sin datos";
         }
-        return patrocinadoresTexto;
+        
+        return { patrocinadores: patrocinadoresTexto, rubro: rubroTexto };
     }
 }
 
