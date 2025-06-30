@@ -229,7 +229,6 @@ class Sistema {
     }
 
     ordenarInscriptosPorNombre(carrera) {
-
         let inscriptos = carrera.inscriptos.slice();
         inscriptos.sort(function (a, b) {
             return a.compararPorNombre(b);
@@ -239,7 +238,6 @@ class Sistema {
     }
 
     ordenarInscriptosPorNumero(carrera) {
-
         let inscriptos = carrera.inscriptos.slice();
         inscriptos.sort(function (a, b) {
             return a.compararPorNumero(b);
@@ -273,18 +271,19 @@ class Sistema {
                     if (patrocinadoresTexto !== "") {
                         patrocinadoresTexto += ", ";
                     }
-                    patrocinadoresTexto += elemPT.nombre
+                    patrocinadoresTexto += elemPT.nombre;
                 }
             }
 
             if (patrocinadoresTexto == "") {
-                patrocinadoresTexto = "Sin datos"
+                patrocinadoresTexto = "Sin datos";
             }
         } else {
-            patrocinadoresTexto = "Sin datos"
+            patrocinadoresTexto = "Sin datos";
         }
         return patrocinadoresTexto;
     }
 }
+
 
 

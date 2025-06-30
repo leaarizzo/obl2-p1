@@ -57,7 +57,7 @@ table.sin caption {
     padding-bottom: 5px;
 }
 
-table.sin th {
+table.sin th, td {
     border: 1px solid black;
     padding: 4px 10px;
     text-align: center;
@@ -73,11 +73,15 @@ table.sin th {
     width: 70px;
 }
 
-.oculto {
+.hide {
   display: none;
 }
 
 .botonActivo {
   background-color: #444;
   color: white;
+}
+
+.rojo {
+    background-color: red;
 }

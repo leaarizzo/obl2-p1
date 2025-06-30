@@ -25,17 +25,21 @@ function inicio() {
     document.getElementById("idBtnAgregarPatrocinador").addEventListener("click", agregarPatrocinador);
     document.getElementById("idBtnAgregarCorredor").addEventListener("click", agregarCorredor);
     document.getElementById("idBtnInscribir").addEventListener("click", inscribir);
+    document.getElementById("idConsultaCarrera").addEventListener("change", cargarInscriptosEnTabla);
+    document.getElementById("idNombreOrden").addEventListener("change", cargarInscriptosEnTabla);
+    document.getElementById("idNumeroOrden").addEventListener("change", cargarInscriptosEnTabla);
 
     document.getElementById("idSeccionDatos").classList.remove("oculto");
     document.getElementById("idSeccionEstadisticas").classList.add("oculto");
 
     document.getElementById("idBtnDatos").classList.add("botonActivo");
 
-    document.getElementById("idBtnDatos").onclick = mostrarDatos;
-    document.getElementById("idBtnEstadisticas").onclick = mostrarEstadisticas;
+    document.getElementById("idBtnDatos").addEventListener("click", mostrarDatos);
+    document.getElementById("idBtnEstadisticas").addEventListener("click", mostrarEstadisticas);
+
 }
 
-function agregarCarrera() { //podrian llamarse igual pero ser otro dia? o igual pero con distito departamento? preguntarle a anuar 
+function agregarCarrera() {
     if (document.getElementById("idFormCarreras").reportValidity()) {
         let nombre = document.getElementById("idNombreCarrera").value;
         nombre = nombre.trim();
@@ -43,13 +47,18 @@ function agregarCarrera() { //podrian llamarse igual pero ser otro dia? o igual 
         let fecha = document.getElementById("idFechaCarrera").value;
         let fechaObjeto = new Date(fecha);
         let cupoMax = document.getElementById("idCupoCarrera").value;
+        let hoy = new Date();
 
         if (sistema.carreraUnica(nombre)) {
-            let carrera = new Carrera(nombre, departamento, fechaObjeto, cupoMax);
-            sistema.agregarCarrera(carrera);
-            alert("¡Carrera agregada exitosamente!");
-            document.getElementById("idFormCarreras").reset();
-            cargar();
+            if (fecha - hoy > 0) {
+                let carrera = new Carrera(nombre, departamento, fechaObjeto, cupoMax);
+                sistema.agregarCarrera(carrera);
+                alert("¡Carrera agregada exitosamente!");
+                document.getElementById("idFormCarreras").reset();
+                cargar();
+            } else {
+                alert("¡Ya pasó ese día!");
+            }
         }
         else {
             alert("¡La carrera ya existe!")
@@ -174,15 +183,15 @@ function inscribir() {
 }
 
 function mostrarDatos() {
-    document.getElementById("idSeccionDatos").classList.remove("oculto");
-    document.getElementById("idSeccionEstadisticas").classList.add("oculto");
+    document.getElementById("idSeccionDatos").classList.remove("hide");
+    document.getElementById("idSeccionEstadisticas").classList.add("hide");
     document.getElementById("idBtnDatos").classList.add("botonActivo");
     document.getElementById("idBtnEstadisticas").classList.remove("botonActivo");
 }
 
 function mostrarEstadisticas() {
-    document.getElementById("idSeccionDatos").classList.add("oculto");
-    document.getElementById("idSeccionEstadisticas").classList.remove("oculto");
+    document.getElementById("idSeccionDatos").classList.add("hide");
+    document.getElementById("idSeccionEstadisticas").classList.remove("hide");
     document.getElementById("idBtnDatos").classList.remove("botonActivo");
     document.getElementById("idBtnEstadisticas").classList.add("botonActivo");
     drawRegionsMap();
@@ -197,6 +206,7 @@ function cargar() {
     cargarCarrerasConMasInscriptos();
     cargarPromedioInscriptosPorCarrera();
     cargarCarrerasSinInscriptosPorFecha();
+    cargarInscriptosEnTabla();
 }
 
 
@@ -250,29 +260,33 @@ function cargarCombosInscripcionesCarreras() {
 function cargarInscriptosEnTabla() {
     let combo = document.getElementById("idConsultaCarrera");
     let carreraIndex = combo.selectedIndex;
-    let carrera = sistema.listaCarreras[carreraIndex];
-    let tabla = document.getElementById("idTablaInscriptos");
-    tabla.innerHTML = "";
-    let inscripciones = [];
-    if (document.getElementById("idNombreOrden").checked) {
-        inscripciones = sistema.ordenarInscriptosPorNombre(carrera);
-    } else if (document.getElementById("idNumeroOrden").checked) {
-        inscripciones = sistema.ordenarInscriptosPorNumero(carrera);
+    if (carreraIndex != -1 && sistema.listaCarreras.length != 0) {
+        let carrera = sistema.listaCarreras[carreraIndex];
+        let tabla = document.getElementById("idTablaInscriptos");
+        tabla.innerHTML = "";
+        let inscripciones = [];
+        if (document.getElementById("idNombreOrden").checked) {
+            inscripciones = sistema.ordenarInscriptosPorNombre(carrera);
+        } else if (document.getElementById("idNumeroOrden").checked) {
+            inscripciones = sistema.ordenarInscriptosPorNumero(carrera);
+        }
+        for (let inscripcion of inscripciones) {
+            let fila = tabla.insertRow();
+            let celda1 = fila.insertCell();
+            let celda2 = fila.insertCell();
+            let celda3 = fila.insertCell();
+            let celda4 = fila.insertCell();
+            let celda5 = fila.insertCell();
+            celda1.innerHTML = inscripcion.corredor.nombre;
+            celda2.innerHTML = inscripcion.corredor.edad;
+            celda3.innerHTML = inscripcion.corredor.cedula;
+            celda4.innerHTML = inscripcion.corredor.vencimientoFicha.toLocaleDateString();
+            celda5.innerHTML = inscripcion.numero;
+            if (inscripcion.corredor.tipoDeportista == "elite") {
+                fila.classList.add("rojo");
+            }
+        }
     }
-    for (let inscripcion of inscripciones) {
-        let fila = tabla.insertRow();
-        let celda1 = fila.insertCell();
-        let celda2 = fila.insertCell();
-        let celda3 = fila.insertCell();
-        let celda4 = fila.insertCell();
-        let celda5 = fila.insertCell();
-        celda1.innerHTML = inscripcion.corredor.nombre;
-        celda2.innerHTML = inscripcion.corredor.edad;
-        celda3.innerHTML = inscripcion.corredor.cedula;
-        celda4.innerHTML = inscripcion.corredor.vencimientoFicha;
-        celda5.innerHTML = inscripcion.numero;
-    }
-
 }
 
 function cargarCarrerasConMasInscriptos() {
