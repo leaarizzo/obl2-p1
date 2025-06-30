@@ -12,6 +12,7 @@ Obligatorio Programación 1 - 1er semestre 2025
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sitio de Corredores</title>
     <link rel="stylesheet" href="css/estilos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.0/jspdf.umd.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="js/clases.js"></script>
     <script src="js/funciones.js"></script>
@@ -32,115 +33,116 @@ Obligatorio Programación 1 - 1er semestre 2025
 
     <main>
         <section id="idSeccionDatos">
-    <h2>Datos</h2>
+            <h2>Datos</h2>
 
-    <article>
-        <form id="idFormCarreras">
-            <h3>Carreras</h3>
+            <article>
+                <form id="idFormCarreras">
+                    <h3>Carreras</h3>
 
-            <label for="idNombreCarrera">Nombre:</label>
-            <input type="text" id="idNombreCarrera" name="nombreCarrera" required>
+                    <label for="idNombreCarrera">Nombre:</label>
+                    <input type="text" id="idNombreCarrera" name="nombreCarrera" required>
 
-            <label for="idDepartamentos">Departamento:</label>
-            <select name="departamentos" id="idDepartamentos" required>
-                <option selected value="1">Montevideo</option>
-                <option value="2">Canelones</option>
-                <option value="3">Maldonado</option>
-                <option value="4">Rocha</option>
-                <option value="5">Treinta y Tres</option>
-                <option value="6">Cerro Largo</option>
-                <option value="7">Rivera</option>
-                <option value="8">Artigas</option>
-                <option value="9">Salto</option>
-                <option value="10">Paysandú</option>
-                <option value="11">Río Negro</option>
-                <option value="12">Soriano</option>
-                <option value="13">Colonia</option>
-                <option value="14">San José</option>
-                <option value="15">Flores</option>
-                <option value="16">Florida</option>
-                <option value="17">Lavalleja</option>
-                <option value="18">Durazno</option>
-                <option value="19">Tacuarembó</option>
-            </select>
+                    <label for="idDepartamentos">Departamento:</label>
+                    <select name="departamentos" id="idDepartamentos" required>
+                        <option selected value="1">Montevideo</option>
+                        <option value="2">Canelones</option>
+                        <option value="3">Maldonado</option>
+                        <option value="4">Rocha</option>
+                        <option value="5">Treinta y Tres</option>
+                        <option value="6">Cerro Largo</option>
+                        <option value="7">Rivera</option>
+                        <option value="8">Artigas</option>
+                        <option value="9">Salto</option>
+                        <option value="10">Paysandú</option>
+                        <option value="11">Río Negro</option>
+                        <option value="12">Soriano</option>
+                        <option value="13">Colonia</option>
+                        <option value="14">San José</option>
+                        <option value="15">Flores</option>
+                        <option value="16">Florida</option>
+                        <option value="17">Lavalleja</option>
+                        <option value="18">Durazno</option>
+                        <option value="19">Tacuarembó</option>
+                    </select>
 
-            <label for="idFechaCarrera">Fecha:</label>
-            <input type="date" id="idFechaCarrera" name="fechaCarrera" required>
+                    <label for="idFechaCarrera">Fecha:</label>
+                    <input type="date" id="idFechaCarrera" name="fechaCarrera" required>
 
-            <label for="idCupoCarrera">Cupo:</label>
-            <input type="number" id="idCupoCarrera" name="cupoCarrera" min="1" max="1000" value="30" required>
+                    <label for="idCupoCarrera">Cupo:</label>
+                    <input type="number" id="idCupoCarrera" name="cupoCarrera" min="1" max="1000" value="30" required>
 
-            <input type="button" id="idBtnAgregarCarrera" name="btnAgregarCarrera" value="Agregar carrera">
-        </form>
-    </article>
+                    <input type="button" id="idBtnAgregarCarrera" name="btnAgregarCarrera" value="Agregar carrera">
+                </form>
+            </article>
 
-    <article>
-        <form id="idFormPatrocinadores">
-            <h3>Patrocinadores</h3>
+            <article>
+                <form id="idFormPatrocinadores">
+                    <h3>Patrocinadores</h3>
 
-            <label for="idNombrePatrocinador">Nombre</label>
-            <input type="text" id="idNombrePatrocinador" name="nombrePatrocinador" required>
+                    <label for="idNombrePatrocinador">Nombre</label>
+                    <input type="text" id="idNombrePatrocinador" name="nombrePatrocinador" required>
 
-            <label for="idRubroPatrocinador">Rubro:</label>
-            <select name="rubroPatrocinador" id="idRubroPatrocinador" required>
-                <option selected value="alimenticio">Alimenticio</option>
-                <option value="banco">Banco</option>
-                <option value="bebidas">Bebidas</option>
-                <option value="farmacia">Farmacia</option>
-                <option value="ropaDeportiva">Ropa deportiva</option>
-                <option value="estatal">Estatal</option>
-                <option value="general">General</option>
-            </select>
+                    <label for="idRubroPatrocinador">Rubro:</label>
+                    <select name="rubroPatrocinador" id="idRubroPatrocinador" required>
+                        <option selected value="alimenticio">Alimenticio</option>
+                        <option value="banco">Banco</option>
+                        <option value="bebidas">Bebidas</option>
+                        <option value="farmacia">Farmacia</option>
+                        <option value="ropaDeportiva">Ropa deportiva</option>
+                        <option value="estatal">Estatal</option>
+                        <option value="general">General</option>
+                    </select>
 
-            <label>Carreras:</label>
-            <select multiple size="4" class="select-peq" id="idCarrerasPatrocinio" required></select>
+                    <label>Carreras:</label>
+                    <select multiple size="4" class="select-peq" id="idCarrerasPatrocinio" required></select>
 
-            <input type="button" id="idBtnAgregarPatrocinador" name="btnAgregarPatrocinador" value="Agregar patrocinador">
-        </form>
-    </article>
+                    <input type="button" id="idBtnAgregarPatrocinador" name="btnAgregarPatrocinador"
+                        value="Agregar patrocinador">
+                </form>
+            </article>
 
-    <article>
-        <form id="idFormCorredores">
-            <h3>Corredores</h3>
+            <article>
+                <form id="idFormCorredores">
+                    <h3>Corredores</h3>
 
-            <label for="idNombreCorredor">Nombre:</label>
-            <input type="text" id="idNombreCorredor" name="nombreCorredor" required>
+                    <label for="idNombreCorredor">Nombre:</label>
+                    <input type="text" id="idNombreCorredor" name="nombreCorredor" required>
 
-            <label for="idEdadCorredor">Edad:</label>
-            <input type="number" id="idEdadCorredor" name="edadCorredor" min="18" required>
+                    <label for="idEdadCorredor">Edad:</label>
+                    <input type="number" id="idEdadCorredor" name="edadCorredor" min="18" required>
 
-            <label for="idCedulaCorredor">Cédula:</label>
-            <input type="number" id="idCedulaCorredor" name="cedulaCorredor" required>
+                    <label for="idCedulaCorredor">Cédula:</label>
+                    <input type="number" id="idCedulaCorredor" name="cedulaCorredor" required>
 
-            <label for="idFechaFicha">Fecha de vencimiento de ficha médica:</label>
-            <input type="date" id="idFechaFicha" name="fechaFicha" required>
+                    <label for="idFechaFicha">Fecha de vencimiento de ficha médica:</label>
+                    <input type="date" id="idFechaFicha" name="fechaFicha" required>
 
-            <div class="fila">
-                <label>Tipo de corredor:</label>
-                <input type="radio" name="tipoCorredor" id="idElite">
-                <label for="idElite">Deportista de élite</label>
-                <input type="radio" name="tipoCorredor" id="idComun" checked>
-                <label for="idComun">Deportista común</label>
-            </div>
+                    <div class="fila">
+                        <label>Tipo de corredor:</label>
+                        <input type="radio" name="tipoCorredor" id="idElite">
+                        <label for="idElite">Deportista de élite</label>
+                        <input type="radio" name="tipoCorredor" id="idComun" checked>
+                        <label for="idComun">Deportista común</label>
+                    </div>
 
-            <input type="button" id="idBtnAgregarCorredor" name="btnAgregarCorredor" value="Agregar corredor">
-        </form>
-    </article>
+                    <input type="button" id="idBtnAgregarCorredor" name="btnAgregarCorredor" value="Agregar corredor">
+                </form>
+            </article>
 
-    <article>
-        <form id="idFormInscribir">
-            <h3>Inscripciones</h3>
+            <article>
+                <form id="idFormInscribir">
+                    <h3>Inscripciones</h3>
 
-            <label for="idCorredoresInscribir">Corredores</label>
-            <select name="corredoresInscribir" id="idCorredoresInscribir" class="select-peq" required></select>
+                    <label for="idCorredoresInscribir">Corredores</label>
+                    <select name="corredoresInscribir" id="idCorredoresInscribir" class="select-peq" required></select>
 
-            <label for="idCarrerasInscribir">Carreras</label>
-            <select name="carrerasInscribir" id="idCarrerasInscribir" class="select-peq" required></select>
+                    <label for="idCarrerasInscribir">Carreras</label>
+                    <select name="carrerasInscribir" id="idCarrerasInscribir" class="select-peq" required></select>
 
-            <input type="button" id="idBtnInscribir" name="btnInscribir" value="Inscribir corredor">
-        </form>
-    </article>
-</section>
+                    <input type="button" id="idBtnInscribir" name="btnInscribir" value="Inscribir corredor">
+                </form>
+            </article>
+        </section>
 
 
         <section id="idSeccionEstadisticas" class="oculto">

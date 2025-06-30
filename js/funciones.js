@@ -6,6 +6,19 @@ Obligatorio Programación 1 - 1er semestre 2025
 
 window.addEventListener("load", inicio);
 let sistema = new Sistema();
+let codigosDepartamentos = [
+    'UY-MO', 'UY-CA', 'UY-MA', 'UY-RO', 'UY-TT',
+    'UY-CL', 'UY-RV', 'UY-AR', 'UY-SA', 'UY-PA',
+    'UY-RN', 'UY-SO', 'UY-CO', 'UY-SJ', 'UY-FS',
+    'UY-FD', 'UY-LA', 'UY-DU', 'UY-TA'
+];
+
+let nombresDepartamentos = [
+    "Montevideo", "Canelones", "Maldonado", "Rocha", "Treinta y Tres",
+    "Cerro Largo", "Rivera", "Artigas", "Salto", "Paysandú",
+    "Río Negro", "Soriano", "Colonia", "San José", "Flores",
+    "Florida", "Lavalleja", "Durazno", "Tacuarembó"
+];
 
 function inicio() {
     document.getElementById("idBtnAgregarCarrera").addEventListener("click", agregarCarrera);
@@ -22,7 +35,7 @@ function inicio() {
     document.getElementById("idBtnEstadisticas").onclick = mostrarEstadisticas;
 }
 
-function agregarCarrera() { //podrian llamarse igual pero ser otro dia? o igual pero con distito departamento?
+function agregarCarrera() { //podrian llamarse igual pero ser otro dia? o igual pero con distito departamento? preguntarle a anuar 
     if (document.getElementById("idFormCarreras").reportValidity()) {
         let nombre = document.getElementById("idNombreCarrera").value;
         nombre = nombre.trim();
@@ -57,7 +70,7 @@ function agregarPatrocinador() {
             }
         }
 
-        if (carrerasApoyadas.length === 0) {
+        if (carrerasApoyadas.length == 0) {
             alert("Debe seleccionar al menos una carrera para el patrocinador");
         } else {
             if (sistema.patrocinadorUnico(nombre)) {
@@ -117,7 +130,7 @@ function inscribir() {
         let carreraIndex = comboCarreras.selectedIndex;
         let carrera = sistema.listaCarreras[carreraIndex];
 
-        if (corredorIndex === -1 || carreraIndex === -1) {
+        if (corredorIndex == -1 || carreraIndex == -1) {
             alert("Debe seleccionar un corredor y una carrera");
         } else {
             if (carrera.tieneCupo() && corredor.vencimientoFicha - carrera.fecha > 0) {
@@ -130,6 +143,23 @@ function inscribir() {
                     carrera.agregarInscripto(inscripcion);
                     cargar();
                     alert("¡Inscripción exitosa!");
+                    let patrocinadoresTexto = sistema.patrocinadoresCarrera(carrera);
+
+                    alert(
+                        "Nro en la carrera: " + inscripcion.numero +
+                        " | Carrera: " + carrera.nombre +
+                        " | Departamento: " + obtenerNombreDepartamento(carrera.departamento) +
+                        " | Fecha: " + carrera.fecha.toLocaleDateString() +
+                        " | Patrocinadores de la carrera: " + patrocinadoresTexto +
+                        " | Nombre del corredor: " + corredor.nombre +
+                        " | Cédula del corredor: " + corredor.cedula +
+                        " | Edad del corredor: " + corredor.edad +
+                        " | Tipo de deportista: " + corredor.tipoDeportista +
+                        " | Vencimiento de la ficha medica: " + corredor.vencimientoFicha.toLocaleDateString()
+                    );
+
+                    generarPDFInscriptos(inscripcion);
+
                     document.getElementById("idFormInscribir").reset();
                 } else {
                     alert("¡El corredor ya está inscripto en la carrera seleccionada!");
@@ -283,6 +313,11 @@ function cargarPromedioInscriptosPorCarrera() { //preguntarle a anuar si incluir
     document.getElementById("idPromedioInscriptos").innerHTML = "Promedio de inscriptos por carrera: " + promedio;
 }
 
+// empieza mapa
+function obtenerNombreDepartamento(codigoDepto) {
+    let indexDepto = parseInt(codigoDepto) - 1;
+    return nombresDepartamentos[indexDepto];
+}
 
 google.charts.load('current', {
     packages: ['geochart']
@@ -308,60 +343,16 @@ function drawRegionsMap() {
 }
 
 function getData() {
-    let codigosDepartamentos = {
-        1: 'UY-MO',
-        2: 'UY-CA',
-        3: 'UY-MA',
-        4: 'UY-RO',
-        5: 'UY-TT',
-        6: 'UY-CL',
-        7: 'UY-RV',
-        8: 'UY-AR',
-        9: 'UY-SA',
-        10: 'UY-PA',
-        11: 'UY-RN',
-        12: 'UY-SO',
-        13: 'UY-CO',
-        14: 'UY-SJ',
-        15: 'UY-FS',
-        16: 'UY-FD',
-        17: 'UY-LA',
-        18: 'UY-DU',
-        19: 'UY-TA'
-    };
-
-    let nombresDepartamentos = {
-        1: "Montevideo",
-        2: "Canelones",
-        3: "Maldonado",
-        4: "Rocha",
-        5: "Treinta y Tres",
-        6: "Cerro Largo",
-        7: "Rivera",
-        8: "Artigas",
-        9: "Salto",
-        10: "Paysandú",
-        11: "Río Negro",
-        12: "Soriano",
-        13: "Colonia",
-        14: "San José",
-        15: "Flores",
-        16: "Florida",
-        17: "Lavalleja",
-        18: "Durazno",
-        19: "Tacuarembó"
-    };
-
     let conteo = {};
-    for (let i = 1; i <= 19; i++) {
+    for (let i = 0; i < codigosDepartamentos.length; i++) {
         let cod = codigosDepartamentos[i];
         conteo[cod] = 0;
     }
 
-    if (modo === 'carreras') {
+    if (modo == 'carreras') {
         for (let carrera of sistema.listaCarreras) {
             let depto = parseInt(carrera.departamento);
-            let cod = codigosDepartamentos[depto];
+            let cod = codigosDepartamentos[depto - 1];
             if (cod) {
                 conteo[cod]++;
             }
@@ -370,24 +361,29 @@ function getData() {
         for (let inscripto of sistema.listaInscriptos) {
             let carrera = inscripto.carrera;
             let depto = parseInt(carrera.departamento);
-            let cod = codigosDepartamentos[depto];
+            let cod = codigosDepartamentos[depto - 1];
             if (cod) {
                 conteo[cod]++;
             }
         }
     }
 
-    let resultado = [[
-        'Region',
-        modo === 'carreras' ? 'Carreras' : 'Inscriptos',
-        { role: 'tooltip', type: 'string', p: { html: true } }
-    ]];
+    let textoTipo = '';
+    if (modo == 'carreras') {
+        textoTipo = 'Carreras';
+    } else {
+        textoTipo = 'Inscriptos';
+    }
 
-    for (let i = 1; i <= 19; i++) {
+    let resultado = [
+        ['Region', textoTipo, { role: 'tooltip', type: 'string', p: { html: true } }]
+    ];
+
+    for (let i = 0; i < codigosDepartamentos.length; i++) {
         let cod = codigosDepartamentos[i];
         let nombre = nombresDepartamentos[i];
         let cantidad = conteo[cod];
-        let textoTooltip = `<strong>${nombre}</strong><br>${cantidad} ${modo === 'carreras' ? 'carreras' : 'inscriptos'}`;
+        let textoTooltip = "<strong>" + nombre + "</strong><br>" + cantidad + " " + textoTipo;
         resultado.push([cod, cantidad, textoTooltip]);
     }
 
@@ -399,4 +395,25 @@ function cambiarModo(nuevoModo) {
     drawRegionsMap();
 }
 
+// termina mapa, empieza pdf
+
+function generarPDFInscriptos(inscripcion) {
+    const doc = new window.jspdf.jsPDF();
+
+    doc.setFontSize(16);
+    doc.text("Comprobante de Inscripción", 20, 10);
+
+    doc.setFontSize(12);
+    doc.text("Número de inscripción: " + inscripcion.numero, 20, 20);
+    doc.text("Carrera: " + inscripcion.carrera.nombre, 20, 30);
+    doc.text("Patrocinadores de la carrera: " + sistema.patrocinadoresCarrera(inscripcion.carrera), 20, 40);
+    doc.text("Fecha: " + inscripcion.carrera.fecha.toLocaleDateString(), 20, 50);
+    doc.text("Departamento: " + obtenerNombreDepartamento(inscripcion.carrera.departamento), 20, 60);
+    doc.text("Corredor: " + inscripcion.corredor.nombre, 20, 70);
+    doc.text("Cédula: " + inscripcion.corredor.cedula, 20, 80);
+    doc.text("Edad: " + inscripcion.corredor.edad, 20, 90);
+    doc.text("Tipo de corredor: " + inscripcion.corredor.tipoDeportista, 20, 100);
+
+    doc.save("inscripcion_" + inscripcion.corredor.cedula + "_" + inscripcion.carrera.nombre + ".pdf");
+}
 

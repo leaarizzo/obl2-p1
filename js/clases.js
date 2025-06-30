@@ -206,7 +206,7 @@ class Sistema {
         if (carrerasVaciasOrdenadas.length == 0) {
             nombreYFechaVacias.push("Sin datos");
         }
-        
+
         return nombreYFechaVacias;
     }
 
@@ -264,6 +264,27 @@ class Sistema {
         return iguales == carreraActual;
     }
 
+
+    patrocinadoresCarrera(carrera) {
+        let patrocinadoresTexto = "";
+        if (this.listaPatrocinadores.length > 0) {
+            for (let elemPT of this.listaPatrocinadores) {
+                if (elemPT.carrerasApoyadas.includes(carrera)) {
+                    if (patrocinadoresTexto !== "") {
+                        patrocinadoresTexto += ", ";
+                    }
+                    patrocinadoresTexto += elemPT.nombre
+                }
+            }
+
+            if (patrocinadoresTexto == "") {
+                patrocinadoresTexto = "Sin datos"
+            }
+        } else {
+            patrocinadoresTexto = "Sin datos"
+        }
+        return patrocinadoresTexto;
+    }
 }
 
 
